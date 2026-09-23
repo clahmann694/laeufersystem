@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { LIBERO, ROLE_COLOR, TEAM, textOn } from '../data/volleyball';
 import { Editable, useContent } from '../content/ContentProvider';
@@ -52,7 +52,16 @@ function RuleStepper() {
   const rules = content.basics.rules;
   const [step, setStep] = useState(0);
   const last = rules.length - 1;
-  const go = (i: number) => setStep(Math.max(0, Math.min(last, i)));
+  const card = useRef<HTMLDivElement>(null);
+  const touch = useRef<{ x: number; y: number } | null>(null);
+
+  const go = (i: number) => {
+    const next = Math.max(0, Math.min(last, i));
+    setStep(next);
+    // Auf dem Handy: die Karte wieder ganz nach oben holen, damit Skizze und Knöpfe im Blick bleiben
+    const top = card.current?.getBoundingClientRect().top ?? 0;
+    if (next !== step && top < 56) card.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -64,60 +73,84 @@ function RuleStepper() {
     return () => window.removeEventListener('keydown', onKey);
   });
 
+  // Wischen nach links/rechts blättert
+  const onTouchStart = (e: React.TouchEvent) => (touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY });
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (!touch.current || editing) return;
+    const dx = e.changedTouches[0].clientX - touch.current.x;
+    const dy = e.changedTouches[0].clientY - touch.current.y;
+    touch.current = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(step + (dx < 0 ? 1 : -1));
+  };
+
   const rule = rules[step];
   const Sketch = SKETCHES[step] ?? WhyRunSketch;
+  const controls = (
+    <div className="flex items-center justify-between gap-3">
+      <button
+        onClick={() => go(step - 1)}
+        disabled={step === 0}
+        className="rounded-2xl border border-navy-900/15 px-4 py-2.5 md:py-3 font-bold text-navy-900/80 hover:bg-navy-900/5 disabled:opacity-30"
+      >
+        ← <span className="hidden sm:inline">Zurück</span>
+      </button>
+      <div className="flex gap-1.5" role="tablist" aria-label="Regeln">
+        {rules.map((r, i) => (
+          <button
+            key={i}
+            role="tab"
+            aria-selected={i === step}
+            aria-label={`Regel ${i + 1}: ${r.title}`}
+            onClick={() => go(i)}
+            className={`h-2.5 rounded-full transition-all ${i === step ? 'w-7 bg-vsg-500' : 'w-2.5 bg-navy-900/20 hover:bg-navy-900/40'}`}
+          />
+        ))}
+      </div>
+      {step < last ? (
+        <button onClick={() => go(step + 1)} className="rounded-2xl bg-navy-900 text-white px-5 py-2.5 md:py-3 font-bold hover:bg-navy-800">
+          Weiter →
+        </button>
+      ) : (
+        <a href="#trainer" className="rounded-2xl bg-vsg-500 text-white px-4 py-2.5 md:py-3 font-bold hover:bg-vsg-600 text-sm sm:text-base">
+          <span className="hidden sm:inline">
+            <Editable value={content.basics.cta} onChange={v => update(d => void (d.basics.cta = v))} />
+          </span>
+          <span className="sm:hidden">Zum Trainer</span> ↓
+        </a>
+      )}
+    </div>
+  );
+
   return (
-    <div className="mt-12 rounded-[26px] bg-paper-card border border-navy-900/10 shadow-sm overflow-hidden">
+    <div
+      ref={card}
+      className="mt-8 md:mt-12 scroll-mt-16 rounded-[26px] bg-paper-card border border-navy-900/10 shadow-sm overflow-hidden"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <div className="grid grid-cols-[minmax(0,1fr)] md:grid-cols-[minmax(280px,5fr)_minmax(0,7fr)]">
-        <div className="bg-navy-900 p-5 sm:p-8 grid place-content-center">
-          <div className="w-full max-w-[420px] mx-auto">
+        <div className="bg-navy-900 p-3 md:p-8 grid place-content-center">
+          <div className="w-full max-w-[250px] md:max-w-[420px] mx-auto">
             <Sketch />
           </div>
         </div>
-        <div className="p-6 sm:p-10 flex flex-col">
+        <div className="p-4 md:p-10 flex flex-col">
+          {/* Handy: Steuerung direkt unter der Skizze, damit man ohne Scrollen blättern kann */}
+          <div className="md:hidden pb-4 mb-4 border-b border-navy-900/10">{controls}</div>
           <p className="eyebrow text-navy-900/50">
             Regel {step + 1} von {rules.length}
           </p>
-          <h3 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-tight">
+          <h3 className="mt-2 md:mt-3 text-xl md:text-3xl font-semibold tracking-tight">
             <Editable value={rule.title} onChange={v => update(d => void (d.basics.rules[step].title = v))} />
           </h3>
           <Editable
             as="p"
             richText
-            className="mt-4 text-[17px] leading-relaxed text-navy-900/75"
+            className="mt-3 md:mt-4 text-[15px] md:text-[17px] leading-relaxed text-navy-900/75"
             value={rule.text}
             onChange={v => update(d => void (d.basics.rules[step].text = v))}
           />
-          <div className="mt-auto pt-8 flex items-center justify-between gap-3">
-            <button
-              onClick={() => go(step - 1)}
-              disabled={step === 0}
-              className="rounded-2xl border border-navy-900/15 px-4 py-3 font-bold text-navy-900/80 hover:bg-navy-900/5 disabled:opacity-30"
-            >
-              ← Zurück
-            </button>
-            <div className="flex gap-1.5" role="tablist" aria-label="Regeln">
-              {rules.map((r, i) => (
-                <button
-                  key={i}
-                  role="tab"
-                  aria-selected={i === step}
-                  aria-label={`Regel ${i + 1}: ${r.title}`}
-                  onClick={() => go(i)}
-                  className={`h-2.5 rounded-full transition-all ${i === step ? 'w-7 bg-vsg-500' : 'w-2.5 bg-navy-900/20 hover:bg-navy-900/40'}`}
-                />
-              ))}
-            </div>
-            {step < last ? (
-              <button onClick={() => go(step + 1)} className="rounded-2xl bg-navy-900 text-white px-5 py-3 font-bold hover:bg-navy-800">
-                Weiter →
-              </button>
-            ) : (
-              <a href="#trainer" className="rounded-2xl bg-vsg-500 text-white px-5 py-3 font-bold hover:bg-vsg-600">
-                <Editable value={content.basics.cta} onChange={v => update(d => void (d.basics.cta = v))} /> ↓
-              </a>
-            )}
-          </div>
+          <div className="hidden md:block mt-auto pt-8">{controls}</div>
         </div>
       </div>
     </div>
