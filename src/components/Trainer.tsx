@@ -55,7 +55,6 @@ export function Trainer() {
 
   const key = String(rotation);
   const setterZone = zoneOf(SETTER, rotation);
-  const frontAttackers = TEAM.filter(p => p.role !== 'zuspieler' && isFrontRow(zoneOf(p, rotation)));
   const setterFront = isFrontRow(setterZone);
   const phases = content.trainer.phases;
   const current = phases[phase];
@@ -196,16 +195,6 @@ export function Trainer() {
           </ol>
         )}
 
-        <div className="mt-7 grid grid-cols-2 gap-3">
-          <Stat label="Z steht in" value={`Zone ${setterZone}`} />
-          <Stat label="Vorne verfügbar" value={setterFront ? `${frontAttackers.length} + Z` : `${frontAttackers.length}`} />
-        </div>
-
-        <div className="mt-6 rounded-2xl bg-vsg-200/70 border border-vsg-400/40 p-4 text-xs leading-relaxed text-navy-900/80">
-          <strong className="text-navy-900">Regelhinweis:</strong>{' '}
-          <Editable value={content.trainer.ruleNote} onChange={v => update(d => void (d.trainer.ruleNote = v))} />
-        </div>
-
         <button onClick={() => chooseRotation(rotation + 1)} className="mt-auto pt-6 group">
           <span className="flex items-center justify-between rounded-2xl bg-navy-900 text-white px-6 py-4 font-bold group-hover:bg-navy-800 transition">
             Nächste Rotation
@@ -217,14 +206,6 @@ export function Trainer() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-navy-900/5 p-4">
-      <p className="eyebrow text-navy-900/55">{label}</p>
-      <p className="mt-2 text-lg font-bold">{value}</p>
-    </div>
-  );
-}
 
 /** Formular für eine Linie im Bearbeitungsmodus: wer, Regelart, Erklärung */
 function ConstraintForm({ rotation, index }: { rotation: number; index: number }) {

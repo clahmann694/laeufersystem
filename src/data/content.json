@@ -54,7 +54,6 @@
   },
   "trainer": {
     "badge": "ANNAHMERIEGEL",
-    "ruleNote": "Die Libera betritt und verlässt das Feld über die seitliche Wechselzone – bei ruhendem Ball, ohne Auszeit. Erst wenn der Aufschlag geschlagen ist, darf jede Position verlassen werden.",
     "phases": {
       "grund": {
         "label": "Grundaufstellung",
