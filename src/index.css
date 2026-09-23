@@ -6,14 +6,99 @@
   color-scheme: dark;
 }
 
+/* Helle Karten und Sektionen: Formularfelder und Auswahlmenüs hell rendern */
+.light {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  background: #0b1a27;
+  color: #fff;
+}
+
+/* Große, eng gesetzte Überschriften wie im Entwurf */
+.headline {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+
+/* Kleine Kapitälchen-Labels ("ROTATION WÄHLEN") */
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Spielerinnen gleiten zwischen den Phasen */
+.figure {
+  transition: transform 800ms cubic-bezier(0.32, 0, 0.16, 1), opacity 400ms ease;
+}
+
+.figure--pop {
+  animation: pop 500ms ease-out;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.75);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -64;
+  }
+}
+
+.runway {
+  animation: dash 1.6s linear infinite;
+}
+
+/* Bearbeitungsmodus (?edit=1) */
+.figure--dragging {
+  transition: none;
+}
+
+.editable {
+  outline: 2px dashed rgba(245, 158, 11, 0.6);
+  outline-offset: 3px;
+  border-radius: 4px;
+  cursor: text;
+  min-width: 1ch;
+}
+
+.editable:focus {
+  outline-style: solid;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+/* Navigationsleiste: horizontal scrollbar ohne sichtbaren Balken */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

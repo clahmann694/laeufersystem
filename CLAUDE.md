@@ -41,13 +41,52 @@ Zones on the own half, net at the top:
   exactly one of them is front row. The default `TEAM` encodes that – don't break the
   pairing when editing it.
 - `isFrontRow()` = zones 2, 3, 4. Only they may attack above the net.
-- `targetOf()` returns where a player runs once the ball is served: the setter always to
-  the net right of centre (that *is* the Läufersystem), outsides attack from zone 4,
-  middles from zone 3, the opposite from zone 2; back-row players go to defensive spots.
-  These target points are a first approximation – the user is the volleyball expert,
-  ask her before "correcting" them.
+- **Libero** (`LIBERO`, not part of `TEAM`) is on court from the start for the back-row middle
+  (`benchedMiddle()`); the replaced middle waits on the bench in the Wechselzone.
+- **Läufer I–VI** (`laeuferOf()`): named after the setter's zone, as in the club's
+  training diagrams (rotation 1 = Läufer I, rotation 2 = Läufer VI, … rotation 6 = Läufer II).
+- **Phases** (`PHASES`, `lineup(rotation, phase)`): `grund` → `annahme` → `erklaerung`.
+  The user explicitly removed a "Z ans Netz"/after-serve phase – don't reintroduce it
+  unasked. `content.reception` holds the hand-placed reception formation per rotation, legal at
+  serve contact (overlap rule); `erklaerung` shows the same positions plus `content.constraints`:
+  the overlap pairs (`left` = vertical line, `front` = horizontal line, orange like the
+  club diagrams) with one sentence each in the sidebar. All six formations and their
+  lines come from the club PDF "5-1 Läufersystem" (Formation K1, lower half) – the user
+  is the volleyball expert, ask her before "correcting" coordinates.
+
+## Editable content
+
+Everything the user may want to change lives in `src/data/content.json` (typed by
+`src/data/content.ts`): texts, the eight rule cards, phase texts, role tasks, `reception`
+positions and `constraints` lines. `ContentProvider` (`src/content/`) serves it, keeps a
+draft in localStorage and, with `?edit=1`, turns `Editable` texts into contentEditable,
+makes court figures draggable and shows a line editor + export bar. Code holds only what
+is structural (`TEAM`, colours, zone centres, sketches). New text → add it to the JSON
+and render it through `Editable`, don't hardcode it.
+
+## UI
+
+Page order: `SiteNav` (sticky, IntersectionObserver marks the active section) → Hero →
+`Basics` (eight rules as a stepper, one per step, inline-SVG sketches on a 300×300 court,
+net at top, then a role legend) → `Trainer` → Regeln. There is no separate squad section –
+the user removed it. Sections carry `scroll-mt-14` for the sticky bar.
+The user wants the rules explained *before* the animation and chose the stepper over cards
+after a UX discussion (NN/g: accordions only for content most users don't need). Keep rule
+wording consistent with FIVB 7.4/7.5 (only the receiving team since 2025). Mobile matters:
+check narrow widths after layout changes.
+
+Layout follows a "Sideout Lab"-style mock, colours are the club's: dark navy page,
+VSG cyan (`vsg-500` = crest blue #009fe3) as the only accent, hall-blue court, white
+info card, big tight headlines (`.headline`, `.eyebrow` in `index.css`). Role colours
+(Z pink, A orange, M teal, D purple, L yellow) are deliberately off-brand so figures
+stand out on the blue court. The
+Wechselzone is drawn inside the court SVG so figures can glide in and out with the
+same CSS transition. Mascots and club crest live in `public/`; reference them through
+`import.meta.env.BASE_URL` so GitHub Pages sub-paths work. `?r=<1-6>&p=<phase>` sets
+the initial state.
 
 ## Not built yet
 
-Overlap faults (Stellungsfehler), 4-2 and 6-2 systems, libero, reception formation
-separate from attack positions, explanatory text per rotation. See README.
+Movement after the serve (setter to the net, attack approaches), defence formation,
+overlap faults (Stellungsfehler), 4-2 and 6-2 systems, explanatory text per rotation.
+See README.

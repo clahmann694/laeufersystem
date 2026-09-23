@@ -1,0 +1,342 @@
+{
+  "hero": {
+    "eyebrow": "Volleyball verstehen",
+    "title1": "5-1 Läufersystem",
+    "title2": "",
+    "intro": "Wähle eine Rotation und sieh, wie aus der Grundaufstellung der Annahmeriegel wird. Gezeigt wird nur das annehmende Team, nie die Aufschlagseite.",
+    "bubble": "Bereit für’s Läufersystem?",
+    "caption": "Deine Läufer-Buddys"
+  },
+  "basics": {
+    "title1": "Fangen wir erstmal mit den Grundlagen an",
+    "title2": "",
+    "intro": "Im Volleyball gibt es folgende Regeln, die bei der Positionierung auf dem Feld eingehalten werden müssen.",
+    "cta": "Jetzt die sechs Läufer ansehen",
+    "rules": [
+      {
+        "title": "Sechs Zonen",
+        "text": "Die eigene Feldhälfte hat sechs Zonen: vorne **4 · 3 · 2**, hinten **5 · 6 · 1**. Bei einem gewonnen Aufschlagsrecht wird im Uhrzeigersinn rotiert. Wer auf Position 2 stand rotiert zur 1 und hat Aufschlag."
+      },
+      {
+        "title": "Die Grundposition gilt genau einen Moment",
+        "text": "Die Rotationsordnung muss **in dem Augenblick stimmen, in dem die gegnerische Aufschlägerin den Ball schlägt**. Direkt danach ist alles frei: jede darf dannach also überall hinlaufen."
+      },
+      {
+        "title": "Links–rechts: die Reihenfolge in der Reihe",
+        "text": "Folgende Regel muss vor dem Aufschlag eingehalten werden: Innerhalb einer Reihe zählt die Reihenfolge von links nach rechts. Vorne muss **4 links von 3 und 3 links von 2** stehen, hinten **5 links von 6 und 6 links von 1**. Wie weit auseinander, ist egal – alle drei dürfen sich auch links zusammendrängen, solange die Reihenfolge stimmt."
+      },
+      {
+        "title": "Vorne–hinten: nur die Paare 4+5, 3+6, 2+1",
+        "text": "Gleichzeigt muss eine zweite Regel eingehalten werden: Nach vorne und hinten wird **paarweise** verglichen: 4 muss vor 5 stehen, 3 vor 6, 2 vor 1. Ob die 4 dabei tiefer steht als die 6, spielt keine Rolle – die beiden sind kein Paar. Vorne und hinten heißt hier nicht „vor oder hinter der 3-m-Linie\", sondern nur „näher am Netz als die Partnerin\"."
+      },
+      {
+        "title": "Nur die Füße zählen",
+        "text": "Gemessen wird nur an den Füßen auf dem Boden – **ein Fuß genügt**. Beispiel links–rechts: Die 3 darf in Wirklichkeit fast neben der 4 stehen, solange die 4 mit ihrem linken Fuß weiter links ist als beide Füße der 3. Genauso vorne–hinten: ein Fuß näher am Netz als beide Füße der Partnerin (7.4.3). Der Oberkörper darf sich beliebig lehnen. Wer die Ordnung bricht, macht einen **Stellungsfehler**: Punkt und Aufschlag für den Gegner, die Aufstellung wird berichtigt (7.5)."
+      },
+      {
+        "title": "Vorderfeld und Hinterfeld",
+        "text": "Nur die drei Vorderspielerinnen dürfen **blocken und vor der 3-m-Linie über Netzhöhe angreifen**. Hinterspielerinnen müssen für einen Angriff hinter der 3-m-Linie abspringen. Die Libera spielt nur hinten, ersetzt bei uns die hintere Mittelblockerin und darf weder blocken noch über Netzhöhe angreifen."
+      },
+      {
+        "title": "Das 5-1: eine Zuspielerin, Diagonal gegenüber",
+        "text": "Im 5-1 stellt **immer dieselbe Spielerin** zu – aus allen sechs Zonen. Die Diagonalspielerin steht im Kreis genau gegenüber, drei Zonen weiter. So ist immer eine der beiden vorne: Ist Z hinten, greifen drei vorne an; ist Z vorne, greifen 2 vorne an."
+      },
+      {
+        "title": "Darum läuft die Zuspielerin",
+        "text": "Z soll jeden Ball zuspielen – aber die Rotation schickt sie durch alle sechs Zonen. Die Lösung: Beim Aufschlagkontakt steht sie regelkonform, aber **so nah wie möglich an ihrem Ziel**, und läuft bei Aufschlagkontakt los, sodass sie zuspielen kann. Jede Rotation hat dafür eine eigene Annahmeaufstellung – Läufer I bis VI."
+      }
+    ]
+  },
+  "trainer": {
+    "badge": "ANNAHMERIEGEL",
+    "ruleNote": "Die Libera betritt und verlässt das Feld über die seitliche Wechselzone – bei ruhendem Ball, ohne Auszeit. Erst wenn der Aufschlag geschlagen ist, darf jede Position verlassen werden.",
+    "phases": {
+      "grund": {
+        "label": "Grundaufstellung",
+        "title": "Grundaufstellung",
+        "text": "Alle sechs stehen in ihrer Rotationszone, die Libera schon für die hintere Mitte. Diese Ordnung muss im Moment des gegnerischen Aufschlags stimmen – sonst ist es ein Stellungsfehler."
+      },
+      "annahme": {
+        "label": "Annahmeriegel",
+        "title": "Annahmeriegel",
+        "text": "Beide Außen und L bilden den 3er-Riegel. Die anderen stellen sich so, dass die Stellungsregel noch gilt – Z möglichst nah an ihrem Weg zum Netz."
+      },
+      "erklaerung": {
+        "label": "Erklärung",
+        "title": "Warum so?",
+        "text": "Die orangen Linien zeigen die Stellungsregeln, die diese Aufstellung erzwingen. Senkrecht = links/rechts, waagerecht = vorne/hinten."
+      }
+    }
+  },
+  "regeln": {
+    "intro": "Das Annahmeteam hält beim Aufschlagkontakt die relative Rotationsordnung ein; danach sind die Bewegungen frei. Der Libera-Wechsel selbst ist nicht dargestellt und erfolgt im Spiel bei ruhendem Ball über die seitliche Wechselzone."
+  },
+  "reception": {
+    "1": {
+      "z": {
+        "x": 810,
+        "y": 700
+      },
+      "a1": {
+        "x": 680,
+        "y": 620
+      },
+      "m1": {
+        "x": 450,
+        "y": 320
+      },
+      "d": {
+        "x": 80,
+        "y": 320
+      },
+      "a2": {
+        "x": 180,
+        "y": 610
+      },
+      "l": {
+        "x": 450,
+        "y": 610
+      }
+    },
+    "2": {
+      "z": {
+        "x": 510,
+        "y": 250
+      },
+      "d": {
+        "x": 640,
+        "y": 160
+      },
+      "m1": {
+        "x": 750,
+        "y": 350
+      },
+      "a2": {
+        "x": 160,
+        "y": 580
+      },
+      "l": {
+        "x": 420,
+        "y": 620
+      },
+      "a1": {
+        "x": 732,
+        "y": 620
+      }
+    },
+    "3": {
+      "z": {
+        "x": 320,
+        "y": 300
+      },
+      "m2": {
+        "x": 110,
+        "y": 270
+      },
+      "d": {
+        "x": 820,
+        "y": 330
+      },
+      "a2": {
+        "x": 160,
+        "y": 560
+      },
+      "a1": {
+        "x": 432,
+        "y": 620
+      },
+      "l": {
+        "x": 740,
+        "y": 620
+      }
+    },
+    "4": {
+      "z": {
+        "x": 70,
+        "y": 90
+      },
+      "m2": {
+        "x": 150,
+        "y": 350
+      },
+      "a2": {
+        "x": 240,
+        "y": 630
+      },
+      "a1": {
+        "x": 490,
+        "y": 630
+      },
+      "l": {
+        "x": 730,
+        "y": 630
+      },
+      "d": {
+        "x": 820,
+        "y": 800
+      }
+    },
+    "5": {
+      "z": {
+        "x": 540,
+        "y": 90
+      },
+      "m2": {
+        "x": 670,
+        "y": 330
+      },
+      "a1": {
+        "x": 160,
+        "y": 580
+      },
+      "l": {
+        "x": 408,
+        "y": 620
+      },
+      "a2": {
+        "x": 732,
+        "y": 620
+      },
+      "d": {
+        "x": 620,
+        "y": 810
+      }
+    },
+    "6": {
+      "z": {
+        "x": 600,
+        "y": 70
+      },
+      "m1": {
+        "x": 60,
+        "y": 270
+      },
+      "a1": {
+        "x": 160,
+        "y": 545
+      },
+      "d": {
+        "x": 310,
+        "y": 790
+      },
+      "a2": {
+        "x": 430,
+        "y": 600
+      },
+      "l": {
+        "x": 725,
+        "y": 615
+      }
+    }
+  },
+  "constraints": {
+    "1": [
+      {
+        "a": "a1",
+        "b": "z",
+        "kind": "front",
+        "why": "Deshalb versteckt sich Z rechts hinter A1 – so nah am Netz wie erlaubt, und rechts außen stört sie den Riegel nicht."
+      }
+    ],
+    "2": [
+      {
+        "a": "d",
+        "b": "z",
+        "kind": "front",
+        "why": "D steht am Netz, Z direkt dahinter – kürzester Weg ins Zuspielfenster."
+      },
+      {
+        "a": "d",
+        "b": "m1",
+        "kind": "left",
+        "why": "M1 weicht nach rechts an die 3-m-Linie aus, damit D vorne bleiben kann."
+      },
+      {
+        "a": "a2",
+        "b": "l",
+        "kind": "front",
+        "why": "A2 nimmt links vorne an, die Libera bleibt dahinter in der Mitte."
+      }
+    ],
+    "3": [
+      {
+        "a": "m2",
+        "b": "a2",
+        "kind": "left",
+        "why": "M2 rückt ganz nach links, damit A2 links annehmen kann."
+      },
+      {
+        "a": "m2",
+        "b": "z",
+        "kind": "front",
+        "why": "Z muss hinter M2 bleiben – deshalb steht sie an der 3-m-Linie, nicht am Netz."
+      },
+      {
+        "a": "z",
+        "b": "a1",
+        "kind": "left",
+        "why": "A1 nimmt rechts von Z an – Z ist zwischen M2 und A1 eingeklemmt."
+      },
+      {
+        "a": "a2",
+        "b": "a1",
+        "kind": "front",
+        "why": "A2 (vorne) bleibt näher am Netz als A1 – der Riegel steht schräg."
+      }
+    ],
+    "4": [
+      {
+        "a": "z",
+        "b": "m2",
+        "kind": "left",
+        "why": "Z klebt an der linken Seitenlinie am Netz, M2 rückt an die 3-m-Linie."
+      },
+      {
+        "a": "m2",
+        "b": "a2",
+        "kind": "left",
+        "why": "A2 nimmt links an, bleibt aber rechts von M2 – der Riegel rückt nach links."
+      }
+    ],
+    "5": [
+      {
+        "a": "z",
+        "b": "m2",
+        "kind": "left",
+        "why": "M2 weicht nach rechts an die 3-m-Linie aus, damit Z schon fast im Zuspielfenster steht."
+      },
+      {
+        "a": "a1",
+        "b": "l",
+        "kind": "front",
+        "why": "A1 nimmt links vorne an, die Libera bleibt dahinter in der Mitte."
+      },
+      {
+        "a": "d",
+        "b": "a2",
+        "kind": "left",
+        "why": "D bleibt tief hinten links von A2 und stört den Riegel nicht."
+      }
+    ],
+    "6": [
+      {
+        "a": "m1",
+        "b": "a1",
+        "kind": "left",
+        "why": "M1 zieht sich links zurück, damit A1 links annehmen kann."
+      },
+      {
+        "a": "a1",
+        "b": "a2",
+        "kind": "front",
+        "why": "A1 (vorne) muss näher am Netz bleiben als A2 (hinten) – der Riegel steht schräg."
+      },
+      {
+        "a": "d",
+        "b": "a2",
+        "kind": "left",
+        "why": "D bleibt tief links hinter dem Riegel, links von A2."
+      }
+    ]
+  }
+}
