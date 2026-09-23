@@ -17,11 +17,13 @@ Wo stehe ich beim gegnerischen Aufschlag, und wer nimmt an?
      die diese Aufstellung erzwingen; rechts steht zu jeder Linie ein Satz
 - **▶ Ablauf** gleitet automatisch von der Grundaufstellung in den Annahmeriegel
 - Einzelne Spielerinnen antippen, um nur deren Weg zu sehen
-- Verlinkbare Stände: `?r=3&p=annahme` (Phasen: `grund`, `annahme`, `erklaerung`)
+- Ein Kapitel pro Ansicht (Hash-Routing): Startseite mit drei Kacheln, dann `#/grundlagen`,
+  `#/trainer`, `#/regeln`; Stände im Trainer verlinkbar: `?r=3&p=annahme#/trainer`
+  (Phasen: `grund`, `annahme`, `erklaerung`)
 - **Grundlagen** vor dem Trainer: acht Regeln als Schritte (eine pro Schritt, große Skizze,
   Weiter/Zurück, Pfeiltasten) – Zonen & Rotation, Aufschlagkontakt, Links-rechts-Reihenfolge,
   Paare 4+5/3+6/2+1, Füße, Vorder-/Hinterfeld, 5-1, warum Z läuft
-- Schmale, mitlaufende Navigation mit aktivem Abschnitt; auf dem Handy bleibt im Trainer die
+- Schmale, mitlaufende Kapitel-Navigation; auf dem Handy bleibt im Trainer die
   Rotationswahl beim Scrollen oben
 - Legende (Z = Zuspiel, A1 = Außen 1, …) direkt unter den Grundregeln; Regelbasis mit Quellen
   (FIVB 2025–2028, volleyballer.de)
@@ -30,7 +32,7 @@ Wo stehe ich beim gegnerischen Aufschlag, und wer nimmt an?
 ## Inhalte selbst bearbeiten
 
 Alle Texte, Positionen und Linien liegen in `src/data/content.json`. Die Seite hat einen
-Bearbeitungsmodus – aufrufbar über `?edit=1` (oder das kleine ✎ im Footer):
+Bearbeitungsmodus – aufrufbar über `?edit=1` (vor dem `#`, z. B. `/?edit=1#/trainer`) (oder das kleine ✎ im Footer):
 
 - **Texte**: anklicken und direkt tippen (Hero, Grundregel-Karten, Phasentexte, Rollen, Regelhinweis …).
   In Regeltexten macht `**so**` den Text fett.

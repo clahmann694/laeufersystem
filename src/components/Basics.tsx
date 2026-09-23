@@ -13,8 +13,8 @@ export function Basics({ mascot }: { mascot: string }) {
   const { content, editing, update } = useContent();
   const b = content.basics;
   return (
-    <section id="grundlagen" className="scroll-mt-14 light bg-paper text-navy-900">
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-24">
+    <section className="light bg-paper text-navy-900">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10 sm:py-16">
         <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_300px] items-end">
           <div className="max-w-3xl">
             <p className="eyebrow text-navy-900/70 flex items-center gap-2">
@@ -111,7 +111,7 @@ function RuleStepper() {
           Weiter →
         </button>
       ) : (
-        <a href="#trainer" className="rounded-2xl bg-vsg-500 text-white px-4 py-2.5 md:py-3 font-bold hover:bg-vsg-600 text-sm sm:text-base">
+        <a href="#/trainer" className="rounded-2xl bg-vsg-500 text-white px-4 py-2.5 md:py-3 font-bold hover:bg-vsg-600 text-sm sm:text-base">
           <span className="hidden sm:inline">
             <Editable value={content.basics.cta} onChange={v => update(d => void (d.basics.cta = v))} />
           </span>

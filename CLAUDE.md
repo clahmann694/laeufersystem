@@ -66,14 +66,14 @@ and render it through `Editable`, don't hardcode it.
 
 ## UI
 
-Page order: `SiteNav` (sticky, IntersectionObserver marks the active section) → Hero →
-`Basics` (eight rules as a stepper, one per step, inline-SVG sketches on a 300×300 court,
-net at top, then a role legend) → `Trainer` → Regeln. There is no separate squad section –
-the user removed it. Sections carry `scroll-mt-14` for the sticky bar.
-The user wants the rules explained *before* the animation and chose the stepper over cards
-after a UX discussion (NN/g: accordions only for content most users don't need). Keep rule
-wording consistent with FIVB 7.4/7.5 (only the receiving team since 2025). Mobile matters:
-check narrow widths after layout changes.
+Structure: one chapter per view, hash-routed (`src/router.ts`: `#/`, `#/grundlagen`,
+`#/trainer`, `#/regeln`; query params like `?r=3&p=annahme&edit=1` go *before* the hash).
+`App.tsx` renders `SiteNav` (sticky, chapter tabs) + Home (three chapter tiles, no
+scrolling) | `Basics` (eight rules as a stepper with inline-SVG sketches, then a role
+legend) | `Trainer` | Rules, each followed by `ChapterNav`. The user explicitly chose
+"one chapter per view" over one long scroll page because of phone usability – don't merge
+the chapters back into one page. Keep rule wording consistent with FIVB 7.4/7.5 (only
+the receiving team since 2025). Mobile matters: check narrow widths after layout changes.
 
 Layout follows a "Sideout Lab"-style mock, colours are the club's: dark navy page,
 VSG cyan (`vsg-500` = crest blue #009fe3) as the only accent, hall-blue court, white

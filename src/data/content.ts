@@ -8,6 +8,8 @@ import type { Constraint, Phase, Point } from './volleyball';
  */
 export interface Content {
   hero: { eyebrow: string; title1: string; title2: string; intro: string; bubble: string; caption: string };
+  /** Kurztexte der drei Kacheln auf der Startseite */
+  home: { grundlagen: string; trainer: string; regeln: string };
   basics: { title1: string; title2: string; intro: string; cta: string; rules: { title: string; text: string }[] };
   trainer: { badge: string; ruleNote: string; phases: Record<Phase, { label: string; title: string; text: string }> };
   regeln: { intro: string };

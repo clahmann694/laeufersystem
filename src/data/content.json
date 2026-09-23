@@ -7,6 +7,11 @@
     "bubble": "Bereit für’s Läufersystem?",
     "caption": "Deine Läufer-Buddys"
   },
+  "home": {
+    "grundlagen": "Acht Regeln, die erklären, warum man beim Aufschlag so steht, wie man steht.",
+    "trainer": "Alle sechs Rotationen: Grundaufstellung, Annahmeriegel und die Erklärung dazu.",
+    "regeln": "Woher das alles kommt – Regeltexte und Quellen zum Nachlesen."
+  },
   "basics": {
     "title1": "Fangen wir erstmal mit den Grundlagen an",
     "title2": "",

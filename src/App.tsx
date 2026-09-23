@@ -1,7 +1,8 @@
 import { Basics } from './components/Basics';
-import { SiteNav } from './components/SiteNav';
+import { ChapterNav, SiteNav } from './components/SiteNav';
 import { Trainer } from './components/Trainer';
 import { ContentProvider, EditBar, Editable, useContent } from './content/ContentProvider';
+import { CHAPTERS, hrefOf, useChapter } from './router';
 
 /** Bilder aus public/ – mit Basispfad, damit GitHub Pages sie findet */
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
@@ -23,117 +24,149 @@ export default function App() {
   );
 }
 
+/** Ein Kapitel pro Ansicht: Startseite mit Kacheln, dann Grundlagen / Trainer / Regeln */
 function Page() {
-  const { content, editing, update } = useContent();
+  const chapter = useChapter();
   return (
-    <div className="min-h-full bg-navy-900 text-white overflow-x-hidden">
-      <SiteNav crest={asset('wappen.png')} />
+    <div className="min-h-full bg-navy-900 text-white overflow-x-hidden flex flex-col">
+      <SiteNav crest={asset('wappen.png')} chapter={chapter} />
+      <main className="flex-1">
+        {chapter === 'start' && <Home />}
+        {chapter === 'grundlagen' && (
+          <>
+            <Basics mascot={asset('mascots/kuh.png')} />
+            <div className="light bg-paper text-navy-900">
+              <ChapterNav chapter="grundlagen" />
+            </div>
+          </>
+        )}
+        {chapter === 'trainer' && (
+          <>
+            <section className="max-w-[1400px] mx-auto px-5 sm:px-8 py-6 sm:py-12">
+              <Trainer />
+            </section>
+            <ChapterNav chapter="trainer" />
+          </>
+        )}
+        {chapter === 'regeln' && (
+          <>
+            <Rules />
+            <div className="light bg-ice text-navy-900">
+              <ChapterNav chapter="regeln" />
+            </div>
+          </>
+        )}
+      </main>
 
-      {/* Hero */}
-      <section id="top" className="max-w-[1400px] mx-auto px-5 sm:px-8 pt-10 sm:pt-16 pb-14 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_460px] items-center">
-        <div>
-          <p className="eyebrow text-vsg-300 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-vsg-400" />
-            <Editable value={content.hero.eyebrow} onChange={v => update(d => void (d.hero.eyebrow = v))} />
-          </p>
-          <h1 className="headline mt-6 text-[clamp(3rem,9vw,7.5rem)]">
-            <Editable value={content.hero.title1} onChange={v => update(d => void (d.hero.title1 = v))} />
-            {(editing || content.hero.title2) && (
-              <>
-                <br />
-                <Editable className="text-vsg-300" value={content.hero.title2} onChange={v => update(d => void (d.hero.title2 = v))} />
-              </>
-            )}
-          </h1>
-          <Editable
-            as="p"
-            className="mt-8 max-w-2xl text-lg sm:text-xl leading-relaxed text-white/70"
-            value={content.hero.intro}
-            onChange={v => update(d => void (d.hero.intro = v))}
-          />
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#grundlagen" className="rounded-full bg-vsg-300 text-navy-900 px-6 py-3 font-bold hover:bg-vsg-200 transition">
-              Grundlagen lesen
-            </a>
-            <a href="#trainer" className="rounded-full border border-white/20 px-6 py-3 font-bold text-white/80 hover:text-white hover:border-white/40 transition">
-              Direkt zum Trainer
-            </a>
-          </div>
-        </div>
-        <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} tint="from-vsg-500/40" />
-      </section>
-
-      {/* Grundlagen */}
-      <Basics mascot={asset('mascots/kuh.png')} />
-
-      {/* Trainer */}
-      <section id="trainer" className="scroll-mt-14 max-w-[1400px] mx-auto px-5 sm:px-8 py-16 sm:py-24">
-        <p className="eyebrow text-white/70 flex items-center gap-2 mb-10">
-          <span className="text-white/40 mr-6">02</span>
-          <span className="w-2 h-2 rounded-full bg-vsg-400" /> Trainer · Läufer I–VI
-        </p>
-        <Trainer />
-      </section>
-
-      {/* Regeln */}
-      <section id="regeln" className="scroll-mt-14 light bg-ice text-navy-900">
-        <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-24 grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <div>
-            <p className="eyebrow text-navy-900/50">03</p>
-            <h2 className="mt-6 text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">
-              Regelbasis &amp;
-              <br />
-              Einordnung
-            </h2>
-            <img
-              src={asset('mascots/elefant.png')}
-              alt="Elefanten-Maskottchen"
-              className="mt-10 h-56 w-auto rounded-[26px] border border-navy-900/10 shadow-panel"
-            />
-          </div>
-          <div>
-            <Editable as="p" className="text-lg leading-relaxed text-navy-900/80" value={content.regeln.intro} onChange={v => update(d => void (d.regeln.intro = v))} />
-            <ul className="mt-10 border-t border-navy-900/20">
-              {SOURCES.map(s => (
-                <li key={s.title} className="border-b border-navy-900/20">
-                  <a href={s.href} target="_blank" rel="noreferrer" className="grid grid-cols-[80px_minmax(0,1fr)_auto] items-center gap-4 py-5 group">
-                    <span className="eyebrow">{s.org}</span>
-                    <span className="font-bold group-hover:text-vsg-700 transition">{s.title}</span>
-                    <span className="text-xl">↗</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Fußzeile */}
       <footer className="bg-navy-950">
-        <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10 flex flex-wrap items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <img src={asset('wappen.png')} alt="" className="h-10 w-auto" />
-            <span className="text-sm font-black tracking-[0.2em] uppercase">VSG Kleinsteinbach</span>
-          </div>
-          <p className="text-sm text-white/50">
+        <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-6 flex flex-wrap items-center justify-between gap-4 text-sm">
+          <span className="font-black tracking-[0.2em] uppercase text-white/70">VSG Kleinsteinbach</span>
+          <p className="text-white/50">
             Gebaut zum Sehen, Laufen, Verstehen.{' '}
-            <a href="?edit=1" className="text-white/30 hover:text-amber-300" title="Inhalte bearbeiten">
+            <a href={`?edit=1${window.location.hash}`} className="text-white/30 hover:text-amber-300" title="Inhalte bearbeiten">
               ✎
             </a>
           </p>
-          <a href="#top" className="text-sm font-bold text-vsg-300 hover:text-vsg-200">
-            Zurück aufs Feld ↑
-          </a>
         </div>
       </footer>
     </div>
   );
 }
 
+/** Startseite: Titel, die Buddys und die drei Kapitel als Kacheln – ohne Scrollen */
+function Home() {
+  const { content, editing, update } = useContent();
+  return (
+    <section className="max-w-[1400px] mx-auto px-5 sm:px-8 pt-8 sm:pt-14 pb-10 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-center">
+      <div>
+        <p className="eyebrow text-vsg-300 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-vsg-400" />
+          <Editable value={content.hero.eyebrow} onChange={v => update(d => void (d.hero.eyebrow = v))} />
+        </p>
+        <h1 className="headline mt-4 text-[clamp(2.6rem,8vw,6rem)]">
+          <Editable value={content.hero.title1} onChange={v => update(d => void (d.hero.title1 = v))} />
+          {(editing || content.hero.title2) && (
+            <>
+              <br />
+              <Editable className="text-vsg-300" value={content.hero.title2} onChange={v => update(d => void (d.hero.title2 = v))} />
+            </>
+          )}
+        </h1>
+        <Editable
+          as="p"
+          className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-white/70"
+          value={content.hero.intro}
+          onChange={v => update(d => void (d.hero.intro = v))}
+        />
+
+        <ol className="mt-6 sm:mt-8 grid grid-cols-[minmax(0,1fr)] gap-2.5 sm:gap-3 sm:grid-cols-3">
+          {CHAPTERS.map(c => (
+            <li key={c.id}>
+              <a
+                href={hrefOf(c.id)}
+                className="group h-full rounded-[22px] bg-white/5 border border-white/10 p-4 sm:p-5 hover:bg-white/10 hover:border-vsg-400/60 transition grid grid-cols-[auto_minmax(0,1fr)_auto] sm:block items-center gap-x-4"
+              >
+                <span className="row-span-2 w-9 h-9 rounded-full bg-vsg-500 text-white grid place-content-center font-black">{c.n}</span>
+                <span className="sm:mt-4 block text-lg sm:text-xl font-bold">{c.label}</span>
+                <span className="row-span-2 col-start-3 sm:hidden text-xl text-vsg-300">→</span>
+                <Editable
+                  as="span"
+                  className="col-start-2 sm:mt-1.5 block text-sm leading-snug sm:leading-relaxed text-white/60"
+                  value={content.home[c.id]}
+                  onChange={v => update(d => void (d.home[c.id] = v))}
+                />
+                <span className="hidden sm:block mt-4 text-sm font-bold text-vsg-300 group-hover:text-vsg-200">Öffnen →</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} tint="from-vsg-500/40" />
+    </section>
+  );
+}
+
+function Rules() {
+  const { content, update } = useContent();
+  return (
+    <section className="light bg-ice text-navy-900">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10 sm:py-16 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div>
+          <p className="eyebrow text-navy-900/50">03 · Regeln</p>
+          <h2 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">
+            Regelbasis &amp;
+            <br />
+            Einordnung
+          </h2>
+          <img
+            src={asset('mascots/elefant.png')}
+            alt="Elefanten-Maskottchen"
+            className="mt-8 h-48 sm:h-56 w-auto rounded-[26px] border border-navy-900/10 shadow-panel"
+          />
+        </div>
+        <div>
+          <Editable as="p" className="text-lg leading-relaxed text-navy-900/80" value={content.regeln.intro} onChange={v => update(d => void (d.regeln.intro = v))} />
+          <ul className="mt-8 border-t border-navy-900/20">
+            {SOURCES.map(s => (
+              <li key={s.title} className="border-b border-navy-900/20">
+                <a href={s.href} target="_blank" rel="noreferrer" className="grid grid-cols-[80px_minmax(0,1fr)_auto] items-center gap-4 py-5 group">
+                  <span className="eyebrow">{s.org}</span>
+                  <span className="font-bold group-hover:text-vsg-700 transition">{s.title}</span>
+                  <span className="text-xl">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function MascotCard({ src, bubble, caption, tint }: { src: string; bubble: string; caption: string; tint: string }) {
   return (
     <div
-      className={`relative w-full max-w-md mx-auto lg:max-w-none rounded-[28px] overflow-hidden bg-gradient-to-b ${tint} to-white/5 border border-white/10 shadow-panel aspect-square`}
+      className={`relative w-full max-w-[260px] sm:max-w-sm mx-auto lg:max-w-none rounded-[28px] overflow-hidden bg-gradient-to-b ${tint} to-white/5 border border-white/10 shadow-panel aspect-square`}
     >
       <img src={src} alt="Maskottchen" className="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain object-bottom px-4 drop-shadow-2xl" />
       <div className="absolute top-5 left-5 rounded-2xl bg-navy-950/90 text-white border border-white/15 px-4 py-3 shadow-dot backdrop-blur">
