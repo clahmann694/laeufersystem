@@ -112,6 +112,38 @@ export function figureById(id: string): Figure {
   return TEAM.find(p => p.id === id) ?? LIBERO;
 }
 
+/** Zone einer Figur in einer Rotation; die Libera erbt die Zone der ersetzten Mitte */
+export function zoneOfFigure(id: string, rotation: number): Zone {
+  const f = figureById(id);
+  return f.id === 'l' ? zoneOf(benchedMiddle(rotation), rotation) : zoneOf(f as Player, rotation);
+}
+
+/** Was diese Figur in dieser Rotation bei der gegnerischen Annahme tut – für "Meine Position" */
+export function personalTask(id: string, rotation: number): { status: 'annahme' | 'bank' | 'frei'; text: string } {
+  const f = figureById(id);
+  if (f.role === 'mittelblocker' && benchedMiddle(rotation).id === id) {
+    return { status: 'bank', text: 'Du stehst hinten – die Libera spielt für dich. Du wartest auf der Ersatzbank, bis du wieder nach vorne rotierst.' };
+  }
+  if (RECEIVERS.includes(id)) {
+    return { status: 'annahme', text: 'Du nimmst an: Du bist Teil des 3er-Riegels mit der zweiten Außen und der Libera.' };
+  }
+  const front = isFrontRow(zoneOfFigure(id, rotation));
+  if (f.role === 'zuspieler') {
+    return {
+      status: 'frei',
+      text: front
+        ? 'Du nimmst nicht an. Du stehst vorne – bleib regelkonform, aber so nah wie möglich am Zuspielfenster rechts der Mitte.'
+        : 'Du nimmst nicht an. Versteck dich hinter deiner Partnerin, so nah wie erlaubt an deinem Weg, und lauf beim Aufschlag ans Netz.',
+    };
+  }
+  return {
+    status: 'frei',
+    text: front
+      ? 'Du nimmst nicht an. Bleib aus dem Riegel raus und mach dich vorne für den Angriff bereit.'
+      : 'Du nimmst nicht an. Stell dich hinter den Riegel, damit die Annehmenden freie Bahn haben.',
+  };
+}
+
 /** Der Regelsatz zu einer Linie, z. B. "Z (Zone 4) muss links von M2 (Zone 3) bleiben." */
 export function constraintText(c: Constraint, rotation: number): string {
   const a = figureById(c.a);

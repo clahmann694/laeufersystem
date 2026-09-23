@@ -67,10 +67,12 @@ and render it through `Editable`, don't hardcode it.
 ## UI
 
 Structure: one chapter per view, hash-routed (`src/router.ts`: `#/`, `#/grundlagen`,
-`#/trainer`, `#/regeln`; query params like `?r=3&p=annahme&edit=1` go *before* the hash).
+`#/trainer`, `#/position[/<figure id>]`, `#/regeln`; query params like `?r=3&p=annahme&edit=1` go *before* the hash).
 `App.tsx` renders `SiteNav` (sticky, chapter tabs) + Home (three chapter tiles, no
 scrolling) | `Basics` (eight rules as a stepper with inline-SVG sketches, then a role
-legend) | `Trainer` | Rules, each followed by `ChapterNav`. The user explicitly chose
+legend) | `Trainer` | `MyPosition` (pick a figure, then `Trainer focusId=…`: own figure
+highlighted, zone per rotation, `personalTask()` text, only own lines) | Rules, each
+followed by `ChapterNav`. The user explicitly chose
 "one chapter per view" over one long scroll page because of phone usability – don't merge
 the chapters back into one page. Keep rule wording consistent with FIVB 7.4/7.5 (only
 the receiving team since 2025). Mobile matters: check narrow widths after layout changes.

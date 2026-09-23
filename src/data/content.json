@@ -10,6 +10,7 @@
   "home": {
     "grundlagen": "Acht Regeln, die erklären, warum man beim Aufschlag so steht, wie man steht.",
     "trainer": "Alle sechs Rotationen: Grundaufstellung, Annahmeriegel und die Erklärung dazu.",
+    "position": "Wähle deine Position und sieh das Läufersystem aus deiner Sicht – wo du stehst und was du tust.",
     "regeln": "Woher das alles kommt – Regeltexte und Quellen zum Nachlesen."
   },
   "basics": {
@@ -71,6 +72,10 @@
         "text": "Die orangen Linien zeigen die Stellungsregeln, die diese Aufstellung erzwingen. Senkrecht = links/rechts, waagerecht = vorne/hinten."
       }
     }
+  },
+  "position": {
+    "title": "Welche Position spielst du?",
+    "intro": "Wähl deine Figur. Danach zeigt dir der Trainer alle sechs Rotationen aus deiner Sicht: wo du stehst, ob du annimmst und welche Stellungsregeln dich betreffen."
   },
   "regeln": {
     "intro": "Das Annahmeteam hält beim Aufschlagkontakt die relative Rotationsordnung ein; danach sind die Bewegungen frei. Der Libera-Wechsel selbst ist nicht dargestellt und erfolgt im Spiel bei ruhendem Ball über die seitliche Wechselzone."

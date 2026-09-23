@@ -27,7 +27,8 @@ export function SiteNav({ crest, chapter }: { crest: string; chapter: Chapter })
                 <span className={`hidden sm:grid w-5 h-5 rounded-full place-content-center text-[10px] ${on ? 'bg-navy-900 text-white' : 'bg-white/10'}`}>
                   {c.n}
                 </span>
-                <span>{c.label}</span>
+                <span className="sm:hidden">{c.short}</span>
+                <span className="hidden sm:inline">{c.label}</span>
               </a>
             );
           })}

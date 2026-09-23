@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Court, RULE_COLOR } from './Court';
-import { LIBERO, PHASE_ORDER, Phase, SETTER, TEAM, benchedMiddle, constraintText, isFrontRow, laeuferOf, zoneOf } from '../data/volleyball';
+import { LIBERO, PHASE_ORDER, Phase, ROLE_COLOR, SETTER, TEAM, benchedMiddle, constraintText, figureById, isFrontRow, laeuferOf, personalTask, textOn, zoneOf, zoneOfFigure } from '../data/volleyball';
 import { Editable, useContent } from '../content/ContentProvider';
 
 /** Pause zwischen zwei Phasen beim automatischen Ablauf */
@@ -17,12 +17,15 @@ function initialFromUrl(): { rotation: number; phase: Phase } {
   };
 }
 
-export function Trainer() {
+/** `focusId`: Trainer aus Sicht einer Figur (Kapitel "Meine Position") */
+export function Trainer({ focusId }: { focusId?: string } = {}) {
   const { content, editing, update } = useContent();
   const [rotation, setRotation] = useState(() => initialFromUrl().rotation);
   const [phase, setPhase] = useState<Phase>(() => initialFromUrl().phase);
   const [playing, setPlaying] = useState(false);
-  const [highlightId, setHighlightId] = useState<string | null>(null);
+  const [selectedId, setHighlightId] = useState<string | null>(null);
+  // Mit Fokus ist die eigene Figur immer hervorgehoben
+  const highlightId = focusId ?? selectedId;
 
   // Ablauf: aus der Grundaufstellung in den Annahmeriegel gleiten, dann die Erklärung
   useEffect(() => {
@@ -59,7 +62,10 @@ export function Trainer() {
   const phases = content.trainer.phases;
   const current = phases[phase];
   const stepIndex = PHASE_ORDER.indexOf(phase) + 1;
-  const constraints = content.constraints[key] ?? [];
+  const allConstraints = content.constraints[key] ?? [];
+  const constraints = focusId ? allConstraints.filter(c => c.a === focusId || c.b === focusId) : allConstraints;
+  const me = focusId ? figureById(focusId) : null;
+  const task = focusId ? personalTask(focusId, rotation) : null;
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
@@ -80,6 +86,9 @@ export function Trainer() {
                   }`}
                 >
                   {r}
+                  {focusId && (
+                    <span className="block -mt-0.5 text-[9px] font-bold opacity-70">Z{zoneOfFigure(focusId, r)}</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -99,7 +108,7 @@ export function Trainer() {
         </div>
 
         <div className="mt-6">
-          <Court rotation={rotation} phase={phase} highlightId={highlightId} onSelect={setHighlightId} />
+          <Court rotation={rotation} phase={phase} highlightId={highlightId} onSelect={setHighlightId} onlyFor={focusId} />
         </div>
 
         {/* Phasen */}
@@ -147,6 +156,24 @@ export function Trainer() {
           {setterFront ? 'Z im Vorderfeld · zwei Angreiferinnen am Netz' : 'Z im Hinterfeld · drei Angreiferinnen am Netz'}
         </p>
 
+        {me && task && (
+          <div className="mt-6 rounded-2xl bg-navy-900 text-white p-4 flex gap-3">
+            <span
+              className="shrink-0 w-11 h-11 rounded-full grid place-content-center text-sm font-black"
+              style={{ background: ROLE_COLOR[me.role], color: textOn(me.role) }}
+            >
+              {me.short}
+            </span>
+            <div className="min-w-0">
+              <p className="eyebrow text-vsg-300">
+                Du · Zone {zoneOfFigure(me.id, rotation)} · {isFrontRow(zoneOfFigure(me.id, rotation)) ? 'vorne' : 'hinten'}
+                {task.status === 'annahme' ? ' · Annahme' : task.status === 'bank' ? ' · Bank' : ''}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-white/85">{task.text}</p>
+            </div>
+          </div>
+        )}
+
         <div className="mt-7 pt-7 border-t border-navy-900/10 flex gap-4">
           <span className="shrink-0 w-11 h-11 rounded-full bg-vsg-400 text-white grid place-content-center font-black">{stepIndex}</span>
           <div className="min-w-0 flex-1">
@@ -172,7 +199,7 @@ export function Trainer() {
                   {i + 1}
                 </span>
                 <div className="min-w-0 flex-1 text-sm leading-relaxed text-white/80">
-                  {editing ? (
+                  {editing && !focusId ? (
                     <ConstraintForm rotation={rotation} index={i} />
                   ) : (
                     <>
@@ -182,7 +209,13 @@ export function Trainer() {
                 </div>
               </li>
             ))}
-            {editing && (
+            {focusId && constraints.length === 0 && (
+              <li className="rounded-2xl bg-navy-900/5 p-4 text-sm leading-relaxed text-navy-900/70">
+                In dieser Rotation schränkt dich keine der entscheidenden Stellungsregeln direkt ein – du hast Spielraum,
+                solange du deine Zone nicht mit deinen Nachbarinnen tauschst.
+              </li>
+            )}
+            {editing && !focusId && (
               <li>
                 <button
                   onClick={() => update(d => void (d.constraints[key] = [...(d.constraints[key] ?? []), { a: 'z', b: 'a1', kind: 'left', why: '' }]))}

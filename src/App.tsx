@@ -1,5 +1,6 @@
 import { Basics } from './components/Basics';
 import { ChapterNav, SiteNav } from './components/SiteNav';
+import { MyPosition } from './components/MyPosition';
 import { Trainer } from './components/Trainer';
 import { ContentProvider, EditBar, Editable, useContent } from './content/ContentProvider';
 import { CHAPTERS, hrefOf, useChapter } from './router';
@@ -48,6 +49,12 @@ function Page() {
             <ChapterNav chapter="trainer" />
           </>
         )}
+        {chapter === 'position' && (
+          <>
+            <MyPosition />
+            <ChapterNav chapter="position" />
+          </>
+        )}
         {chapter === 'regeln' && (
           <>
             <Rules />
@@ -73,7 +80,7 @@ function Page() {
   );
 }
 
-/** Startseite: Titel, die Buddys und die drei Kapitel als Kacheln – ohne Scrollen */
+/** Startseite: Titel, die Buddys und die Kapitel als Kacheln – ohne Scrollen */
 function Home() {
   const { content, editing, update } = useContent();
   return (
@@ -99,7 +106,7 @@ function Home() {
           onChange={v => update(d => void (d.hero.intro = v))}
         />
 
-        <ol className="mt-6 sm:mt-8 grid grid-cols-[minmax(0,1fr)] gap-2.5 sm:gap-3 sm:grid-cols-3">
+        <ol className="mt-6 sm:mt-8 grid grid-cols-[minmax(0,1fr)] gap-2.5 sm:gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {CHAPTERS.map(c => (
             <li key={c.id}>
               <a

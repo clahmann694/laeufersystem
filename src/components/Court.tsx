@@ -11,6 +11,8 @@ interface Props {
   phase: Phase;
   highlightId: string | null;
   onSelect: (id: string | null) => void;
+  /** Nur Linien zeigen, an denen diese Figur beteiligt ist */
+  onlyFor?: string;
 }
 
 const ZONES: Zone[] = [4, 3, 2, 5, 6, 1];
@@ -20,13 +22,14 @@ const ZONES: Zone[] = [4, 3, 2, 5, 6, 1];
  * Rechts daneben die Wechselzone mit der Ersatzbank.
  * Im Bearbeitungsmodus lassen sich die Annahmepositionen mit der Maus ziehen.
  */
-export function Court({ rotation, phase, highlightId, onSelect }: Props) {
+export function Court({ rotation, phase, highlightId, onSelect, onlyFor }: Props) {
   const { content, editing, update } = useContent();
   const svgRef = useRef<SVGSVGElement>(null);
   const [dragId, setDragId] = useState<string | null>(null);
 
   const placed = lineup(rotation, phase, content.reception[String(rotation)]);
-  const constraints = content.constraints[String(rotation)] ?? [];
+  const all = content.constraints[String(rotation)] ?? [];
+  const constraints = onlyFor ? all.filter(c => c.a === onlyFor || c.b === onlyFor) : all;
   const showRunways = phase === 'annahme';
   // Ziehen nur im Bearbeitungsmodus und nur für Annahmepositionen (Grundpositionen sind die Zonenmitten)
   const draggable = editing && phase !== 'grund';
