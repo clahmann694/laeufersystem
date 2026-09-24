@@ -1,3 +1,4 @@
+import { Buddy } from './Buddy';
 import { Trainer } from './Trainer';
 import { Editable, useContent } from '../content/ContentProvider';
 import { LIBERO, ROLE_COLOR, TEAM, figureById, textOn } from '../data/volleyball';
@@ -17,12 +18,22 @@ export function MyPosition() {
   if (!chosen) {
     return (
       <section className="max-w-[1000px] mx-auto px-5 sm:px-8 py-8 sm:py-14">
-        <p className="eyebrow text-vsg-300 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-vsg-400" /> Meine Position
-        </p>
-        <h1 className="headline mt-4 text-[clamp(2.2rem,6vw,4.5rem)]">
-          <Editable value={content.position.title} onChange={v => update(d => void (d.position.title = v))} />
-        </h1>
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow text-vsg-300 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-vsg-400" /> Meine Position
+            </p>
+            <h1 className="headline mt-4 text-[clamp(2.2rem,6vw,4.5rem)]">
+              <Editable value={content.position.title} onChange={v => update(d => void (d.position.title = v))} />
+            </h1>
+          </div>
+          <Buddy
+            name="kuh-herz"
+            say={content.buddies.position}
+            onSay={v => update(d => void (d.buddies.position = v))}
+            className="shrink-0 h-32 sm:h-48"
+          />
+        </div>
         <Editable
           as="p"
           className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-white/70"
@@ -70,6 +81,12 @@ export function MyPosition() {
             <p className="text-xl font-bold">{chosen.name}</p>
           </div>
         </div>
+        <Buddy
+          name="ball-daumen"
+          say={content.buddies.positionChosen}
+          onSay={v => update(d => void (d.buddies.positionChosen = v))}
+          className="hidden md:flex h-24 ml-auto"
+        />
         <a href="#/position" className="rounded-2xl border border-white/20 px-4 py-2.5 text-sm font-bold text-white/80 hover:text-white">
           Andere Position wählen
         </a>

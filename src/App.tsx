@@ -1,4 +1,5 @@
 import { Basics } from './components/Basics';
+import { Buddy } from './components/Buddy';
 import { ChapterNav, SiteNav } from './components/SiteNav';
 import { MyPosition } from './components/MyPosition';
 import { Trainer } from './components/Trainer';
@@ -35,7 +36,7 @@ function Page() {
         {chapter === 'start' && <Home />}
         {chapter === 'grundlagen' && (
           <>
-            <Basics mascot={asset('mascots/kuh.png')} />
+            <Basics />
             <div className="light bg-paper text-navy-900">
               <ChapterNav chapter="grundlagen" />
             </div>
@@ -43,7 +44,8 @@ function Page() {
         )}
         {chapter === 'trainer' && (
           <>
-            <section className="max-w-[1400px] mx-auto px-5 sm:px-8 py-6 sm:py-12">
+            <section className="max-w-[1400px] mx-auto px-5 sm:px-8 py-6 sm:py-10">
+              <TrainerHead />
               <Trainer />
             </section>
             <ChapterNav chapter="trainer" />
@@ -128,7 +130,7 @@ function Home() {
           ))}
         </ol>
       </div>
-      <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} tint="from-vsg-500/40" />
+      <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} />
     </section>
   );
 }
@@ -139,16 +141,18 @@ function Rules() {
     <section className="light bg-ice text-navy-900">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10 sm:py-16 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div>
-          <p className="eyebrow text-navy-900/50">03 · Regeln</p>
+          <p className="eyebrow text-navy-900/50">04 · Regeln</p>
           <h2 className="mt-4 text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">
             Regelbasis &amp;
             <br />
             Einordnung
           </h2>
-          <img
-            src={asset('mascots/elefant.png')}
-            alt="Elefanten-Maskottchen"
-            className="mt-8 h-48 sm:h-56 w-auto rounded-[26px] border border-navy-900/10 shadow-panel"
+          <Buddy
+            name="elefant-sitzt"
+            say={content.buddies.regeln}
+            onSay={v => update(d => void (d.buddies.regeln = v))}
+            side="right"
+            className="mt-8 h-32 sm:h-44"
           />
         </div>
         <div>
@@ -170,19 +174,41 @@ function Rules() {
   );
 }
 
-function MascotCard({ src, bubble, caption, tint }: { src: string; bubble: string; caption: string; tint: string }) {
+/** Die drei Buddys freistehend, mit Sprechblase und Namensschild */
+function MascotCard({ src, bubble, caption }: { src: string; bubble: string; caption: string }) {
   return (
-    <div
-      className={`relative w-full max-w-[260px] sm:max-w-sm mx-auto lg:max-w-none rounded-[28px] overflow-hidden bg-gradient-to-b ${tint} to-white/5 border border-white/10 shadow-panel aspect-square`}
-    >
-      <img src={src} alt="Maskottchen" className="absolute inset-x-0 bottom-0 w-full h-[88%] object-contain object-bottom px-4 drop-shadow-2xl" />
-      <div className="absolute top-5 left-5 rounded-2xl bg-navy-950/90 text-white border border-white/15 px-4 py-3 shadow-dot backdrop-blur">
+    <div className="relative w-full max-w-[280px] sm:max-w-sm mx-auto lg:max-w-none">
+      {/* weicher Lichtschein statt Kartenrahmen */}
+      <div className="absolute inset-x-6 bottom-4 top-16 rounded-full bg-vsg-500/25 blur-3xl" aria-hidden />
+      <img src={src} alt="Die Läufer-Buddys: Kuh, Volleyball und Elefant" className="relative w-full h-auto drop-shadow-[0_18px_24px_rgba(0,0,0,0.45)]" />
+      <div className="absolute -top-2 left-0 rounded-2xl rounded-bl-md bg-navy-950 text-white border border-white/15 px-4 py-3 shadow-dot">
         <p className="text-[10px] font-black tracking-[0.2em] text-vsg-300">1 → 6</p>
         <p className="mt-1 text-sm font-bold leading-tight max-w-[11rem]">{bubble}</p>
       </div>
-      <p className="absolute bottom-5 left-5 rounded-full bg-vsg-500 text-white px-4 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase shadow-dot">
+      <p className="absolute bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-vsg-500 text-white px-4 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase shadow-dot">
         {caption}
       </p>
+    </div>
+  );
+}
+
+/** Kopf des Trainer-Kapitels mit springendem Ball */
+function TrainerHead() {
+  const { content, update } = useContent();
+  return (
+    <div className="mb-4 sm:mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p className="eyebrow text-vsg-300 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-vsg-400" /> 02 · Trainer
+        </p>
+        <h1 className="headline mt-3 text-[clamp(2rem,5vw,3.5rem)]">Läufer I–VI</h1>
+      </div>
+      <Buddy
+        name="ball-springt"
+        say={content.buddies.trainer}
+        onSay={v => update(d => void (d.buddies.trainer = v))}
+        className="shrink-0 h-24 sm:h-32"
+      />
     </div>
   );
 }

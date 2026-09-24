@@ -347,5 +347,13 @@
         "why": "D bleibt tief links hinter dem Riegel, links von A2."
       }
     ]
+  },
+  "buddies": {
+    "grundlagen": "Erst die Regeln – dann läuft’s von allein!",
+    "trainer": "Drück ▶ Ablauf und schau, wer wohin läuft!",
+    "position": "Welche bist du? Tipp dich an!",
+    "positionChosen": "Stark! Geh alle sechs Rotationen durch.",
+    "regeln": "Hier kannst du alles nachlesen.",
+    "weiter": "Weiter geht’s!"
   }
 }

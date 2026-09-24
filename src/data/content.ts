@@ -15,6 +15,8 @@ export interface Content {
   basics: { title1: string; title2: string; intro: string; cta: string; rules: { title: string; text: string }[] };
   trainer: { badge: string; phases: Record<Phase, { label: string; title: string; text: string }> };
   regeln: { intro: string };
+  /** Sprechblasen der Maskottchen je Kapitel */
+  buddies: { grundlagen: string; trainer: string; position: string; positionChosen: string; regeln: string; weiter: string };
   /** Annahmeformation je Rotation ("1"…"6") und Figur */
   reception: Record<string, Record<string, Point>>;
   /** Orange Linien je Rotation */

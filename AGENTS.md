@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 Guidance for AI coding agents working in this repository.
 The user speaks German; UI strings are German, code and commits are English.
@@ -83,9 +83,7 @@ info card, big tight headlines (`.headline`, `.eyebrow` in `index.css`). Role co
 (Z pink, A orange, M teal, D purple, L yellow) are deliberately off-brand so figures
 stand out on the blue court. The
 Wechselzone is drawn inside the court SVG so figures can glide in and out with the
-same CSS transition. Mascots: `public/mascots/team.png` (group, start page) and 15 transparent single poses in
-`public/buddies/` (kuh/ball/elefant × winkt/sitzt/…), shown via `<Buddy name say>` as
-companions in every chapter (speech-bubble texts in `content.buddies`). Club crest in `public/`; reference them through
+same CSS transition. Mascots and club crest live in `public/`; reference them through
 `import.meta.env.BASE_URL` so GitHub Pages sub-paths work. `?r=<1-6>&p=<phase>` sets
 the initial state.
 

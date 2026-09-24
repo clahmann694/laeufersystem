@@ -1,4 +1,13 @@
 import { CHAPTERS, Chapter, hrefOf } from '../router';
+import { Buddy, BuddyName } from './Buddy';
+
+/** Am Kapitelende winkt jedes Mal ein anderer Buddy */
+const OUTRO: Record<string, BuddyName> = {
+  grundlagen: 'elefant-winkt',
+  trainer: 'ball-jubelt',
+  position: 'kuh-jubelt',
+  regeln: 'elefant-hallo',
+};
 
 /** Schmale, mitlaufende Leiste: Wappen (zurück zur Übersicht) und die drei Kapitel */
 export function SiteNav({ crest, chapter }: { crest: string; chapter: Chapter }) {
@@ -48,6 +57,7 @@ export function ChapterNav({ chapter }: { chapter: Exclude<Chapter, 'start'> }) 
       <a href={prev ? hrefOf(prev.id) : hrefOf('start')} className="rounded-2xl border border-current/20 px-4 py-3 opacity-80 hover:opacity-100">
         ← {prev ? prev.label : 'Übersicht'}
       </a>
+      <Buddy name={OUTRO[chapter]} className="h-16 sm:h-24 ml-auto -my-2" />
       {next ? (
         <a href={hrefOf(next.id)} className="rounded-2xl bg-vsg-500 text-white px-5 py-3 hover:bg-vsg-600">
           Weiter: {next.label} →

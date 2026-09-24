@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { LIBERO, ROLE_COLOR, TEAM, textOn } from '../data/volleyball';
 import { Editable, useContent } from '../content/ContentProvider';
+import { Buddy } from './Buddy';
 
 const SKETCHES = [RotationSketch, MomentSketch, LeftRightSketch, PairsSketch, FeetSketch, FrontBackSketch, FiveOneSketch, WhyRunSketch];
 
@@ -9,13 +10,13 @@ const SKETCHES = [RotationSketch, MomentSketch, LeftRightSketch, PairsSketch, Fe
  * Die Grundregeln, die man braucht, um das Läufersystem zu verstehen –
  * jede mit einer kleinen Skizze. Quellen: FIVB-Regeln 2025–2028, Regel 7.4 / 7.5 / 13.2 / 19.
  */
-export function Basics({ mascot }: { mascot: string }) {
+export function Basics() {
   const { content, editing, update } = useContent();
   const b = content.basics;
   return (
     <section className="light bg-paper text-navy-900">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10 sm:py-16">
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_300px] items-end">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_auto] items-end">
           <div className="max-w-3xl">
             <p className="eyebrow text-navy-900/70 flex items-center gap-2">
               <span className="text-navy-900/40 mr-6">01</span>
@@ -32,10 +33,11 @@ export function Basics({ mascot }: { mascot: string }) {
             </h2>
             <Editable as="p" className="mt-8 text-lg leading-relaxed text-navy-900/70" value={b.intro} onChange={v => update(d => void (d.basics.intro = v))} />
           </div>
-          <img
-            src={mascot}
-            alt="Kuh-Maskottchen mit Volleyball"
-            className="hidden lg:block h-72 w-auto justify-self-center rounded-[26px] border border-navy-900/10 shadow-panel"
+          <Buddy
+            name="kuh-sitzt"
+            say={content.buddies.grundlagen}
+            onSay={v => update(d => void (d.buddies.grundlagen = v))}
+            className="h-36 sm:h-52 lg:h-64 justify-self-end"
           />
         </div>
 
