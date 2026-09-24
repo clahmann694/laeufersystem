@@ -21,7 +21,7 @@ export function MyPosition() {
   if (!chosen) {
     return (
       <section className="max-w-[1000px] mx-auto px-5 sm:px-8 py-8 sm:py-14">
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
           <div>
             <p className="eyebrow text-vsg-300 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-vsg-400" /> Meine Position
@@ -34,7 +34,7 @@ export function MyPosition() {
             name="kuh-herz"
             say={content.buddies.position}
             onSay={v => update(d => void (d.buddies.position = v))}
-            className="shrink-0 h-32 sm:h-48"
+            className="self-end shrink-0 h-28 sm:h-48"
           />
         </div>
         <Editable

@@ -196,7 +196,7 @@ function MascotCard({ src, bubble, caption }: { src: string; bubble: string; cap
 function TrainerHead() {
   const { content, update } = useContent();
   return (
-    <div className="mb-4 sm:mb-6 flex items-end justify-between gap-4">
+    <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
       <div>
         <p className="eyebrow text-vsg-300 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-vsg-400" /> 02 · Trainer
@@ -207,7 +207,7 @@ function TrainerHead() {
         name="ball-springt"
         say={content.buddies.trainer}
         onSay={v => update(d => void (d.buddies.trainer = v))}
-        className="shrink-0 h-24 sm:h-32"
+        className="self-end shrink-0 h-24 sm:h-32"
       />
     </div>
   );

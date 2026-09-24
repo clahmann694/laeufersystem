@@ -25,10 +25,10 @@ export function Buddy({ name, say, onSay, side = 'left', className = '' }: Props
   const src = `${import.meta.env.BASE_URL}buddies/${name}.png`;
   return (
     <div className={`relative flex items-end gap-2 ${side === 'right' ? 'flex-row' : 'flex-row-reverse'} ${className}`}>
-      <img src={src} alt="" aria-hidden className="buddy h-full w-auto object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.35)]" />
+      <img src={src} alt="" aria-hidden className="buddy shrink-0 h-full w-auto object-contain drop-shadow-[0_12px_18px_rgba(0,0,0,0.35)]" />
       {say !== undefined && (
         <div
-          className={`relative self-start mt-1 max-w-[13rem] rounded-2xl bg-navy-950 text-white border border-white/15 px-3.5 py-2.5 text-sm font-bold leading-snug shadow-dot ${
+          className={`relative min-w-0 self-start mt-1 max-w-[11rem] sm:max-w-[13rem] rounded-2xl bg-navy-950 text-white border border-white/15 px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm font-bold leading-snug shadow-dot ${
             side === 'right' ? 'rounded-bl-md' : 'rounded-br-md'
           }`}
         >
