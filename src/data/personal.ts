@@ -66,32 +66,49 @@ function direction(id: string, rotation: number, content: Content): string | nul
   return words.length ? words.join(' und ') : null;
 }
 
-/** Kurzer Name für einfache Sätze, z. B. "A1 (Außen 1)" */
-const short = (f: Figure) => `${f.short} (${f.name})`;
+/** Wie man im Training über die Figur spricht */
+const CALL: Record<string, string> = {
+  z: 'die Zuspielerin',
+  d: 'die Diagonale',
+  a1: 'Außen 1',
+  a2: 'Außen 2',
+  m1: 'Mitte 1',
+  m2: 'Mitte 2',
+  l: 'die Libera',
+};
+const call = (id: string) => CALL[id] ?? figureById(id).name;
+const Call = (id: string) => call(id).charAt(0).toUpperCase() + call(id).slice(1);
 
-/** Die einfache Regel zu einer Linie: "Du darfst nicht vor A1 stehen." */
-export function simpleRule(c: Constraint, meId: string): string {
-  const o = short(figureById(c.a === meId ? c.b : c.a));
-  if (c.kind === 'left') return c.a === meId ? `Du darfst nicht rechts von ${o} stehen.` : `Du darfst nicht links von ${o} stehen.`;
-  return c.a === meId ? `Du darfst nicht hinter ${o} stehen.` : `Du darfst nicht vor ${o} stehen.`;
+/**
+ * Die Regel zu einer Linie in Alltagssprache, mit Begründung aus der Grundaufstellung:
+ * "Da du in der Grundaufstellung auf 6 stehst, ist deine Partnerin die 3 – also die Diagonale.
+ *  Du darfst also nicht weiter vorne stehen als die Diagonale."
+ */
+export function simpleRule(c: Constraint, meId: string, rotation: number): string {
+  const otherId = c.a === meId ? c.b : c.a;
+  const me = zoneOfFigure(meId, rotation);
+  const other = zoneOfFigure(otherId, rotation);
+  if (c.kind === 'front') {
+    const iAmBack = c.b === meId;
+    return iAmBack
+      ? `Da du in der Grundaufstellung auf ${me} stehst, ist deine Partnerin vorne die ${other} – also ${call(otherId)}. Du darfst also nicht weiter vorne stehen als ${call(otherId)}.`
+      : `Da du in der Grundaufstellung auf ${me} stehst, ist deine Partnerin hinten die ${other} – also ${call(otherId)}. ${Call(otherId)} darf also nicht weiter vorne stehen als du.`;
+  }
+  const iAmLeft = c.a === meId;
+  return iAmLeft
+    ? `Da du in der Grundaufstellung auf ${me} stehst und ${call(otherId)} auf ${other}, ist sie deine rechte Nachbarin. Du darfst also nicht weiter rechts stehen als ${call(otherId)}.`
+    : `Da du in der Grundaufstellung auf ${me} stehst und ${call(otherId)} auf ${other}, ist sie deine linke Nachbarin. Du darfst also nicht weiter links stehen als ${call(otherId)}.`;
 }
 
-/** Das genaue Fuß-Maß dazu (FIVB 7.4.3, gleichauf ist erlaubt) */
-export function exactRule(c: Constraint, meId: string): string {
-  if (c.kind === 'left') {
-    return c.a === meId
-      ? 'Ganz genau: Dein linker Fuß darf nicht weiter rechts sein als ihr rechter Fuß. Gleichauf ist erlaubt.'
-      : 'Ganz genau: Dein rechter Fuß darf nicht weiter links sein als ihr linker Fuß. Gleichauf ist erlaubt.';
-  }
-  return c.a === meId
-    ? 'Ganz genau: Dein vorderer Fuß darf nicht weiter hinten sein als ihr hinterer Fuß. Gleichauf ist erlaubt.'
-    : 'Ganz genau: Dein hinterer Fuß darf nicht weiter vorne sein als ihr vorderer Fuß. Gleichauf ist erlaubt.';
+/** Kurzer Hinweis zu den Füßen */
+export function exactRule(): string {
+  return 'Es zählen die Füße – gleich weit ist erlaubt.';
 }
 
 function annahmeText(id: string, rotation: number, content: Content): string {
   const limits = (content.constraints[String(rotation)] ?? [])
     .filter(c => c.a === id || c.b === id)
-    .map(c => `Achte darauf: ${simpleRule(c, id)}`)
+    .map(c => simpleRule(c, id, rotation))
     .join(' ');
   return [annahmeCore(id, rotation, content), limits].filter(Boolean).join(' ');
 }
@@ -126,6 +143,6 @@ export function personalPhaseText(id: string, rotation: number, phase: Phase, co
   if (phase === 'annahme') return annahmeText(id, rotation, content);
   const lines = (content.constraints[String(rotation)] ?? []).filter(c => c.a === id || c.b === id);
   return lines.length
-    ? 'Die orangen Linien sind deine Grenzen. Bis zur Linie darfst du – darüber hinaus ist es ein Stellungsfehler.'
+    ? 'Die orangen Linien zeigen dir, wie weit du gehen darfst. Hier steht, warum:'
     : 'In dieser Rotation begrenzt dich keine der entscheidenden Linien direkt. Du hast Spielraum – aber tausch nie die Reihenfolge mit deinen Nachbarinnen.';
 }

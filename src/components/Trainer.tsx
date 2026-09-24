@@ -244,8 +244,8 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
                   ) : (
                     actualId ? (
                       <>
-                        <strong className="block text-white text-[15px]">Achte darauf: {simpleRule(c, actualId)}</strong>
-                        <span className="block mt-1.5 text-white/80">{exactRule(c, actualId)}</span>
+                        <strong className="block text-white text-[15px]">{simpleRule(c, actualId, rotation)}</strong>
+                        <span className="block mt-1.5 text-white/80">{exactRule()}</span>
                       </>
                     ) : (
                       <>
