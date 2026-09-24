@@ -49,7 +49,7 @@ function grundText(id: string, rotation: number): string {
       ? `Hinter dir steht ${who(partner, rotation)} – sie muss beim Aufschlag hinter dir bleiben.`
       : `Vor dir steht ${who(partner, rotation)} – du musst beim Aufschlag hinter ihr bleiben.`
   );
-  parts.push('Genau diese Spielerinnen bestimmen, wie weit du dich im Annahmeriegel bewegen darfst.');
+  parts.push('Diese Spielerinnen bestimmen gleich, wohin du im Annahmeriegel darfst.');
   return parts.join(' ');
 }
 
@@ -66,23 +66,32 @@ function direction(id: string, rotation: number, content: Content): string | nul
   return words.length ? words.join(' und ') : null;
 }
 
-/** Wie weit darf ich? Kurzform für den Annahme-Text, z. B. "so nah ans Netz, wie es A1 erlaubt …" */
-function limitSentence(c: Constraint, meId: string, rotation: number): string {
-  const o = who(figureById(c.a === meId ? c.b : c.a), rotation);
+/** Kurzer Name für einfache Sätze, z. B. "A1 (Außen 1)" */
+const short = (f: Figure) => `${f.short} (${f.name})`;
+
+/** Die einfache Regel zu einer Linie: "Du darfst nicht vor A1 stehen." */
+export function simpleRule(c: Constraint, meId: string): string {
+  const o = short(figureById(c.a === meId ? c.b : c.a));
+  if (c.kind === 'left') return c.a === meId ? `Du darfst nicht rechts von ${o} stehen.` : `Du darfst nicht links von ${o} stehen.`;
+  return c.a === meId ? `Du darfst nicht hinter ${o} stehen.` : `Du darfst nicht vor ${o} stehen.`;
+}
+
+/** Das genaue Fuß-Maß dazu (FIVB 7.4.3, gleichauf ist erlaubt) */
+export function exactRule(c: Constraint, meId: string): string {
   if (c.kind === 'left') {
     return c.a === meId
-      ? `Du gehst so weit nach rechts, wie es ${o} erlaubt: dein linker Fuß nicht weiter rechts als ihr rechter Fuß.`
-      : `Du gehst so weit nach links, wie es ${o} erlaubt: dein rechter Fuß nicht weiter links als ihr linker Fuß.`;
+      ? 'Ganz genau: Dein linker Fuß darf nicht weiter rechts sein als ihr rechter Fuß. Gleichauf ist erlaubt.'
+      : 'Ganz genau: Dein rechter Fuß darf nicht weiter links sein als ihr linker Fuß. Gleichauf ist erlaubt.';
   }
   return c.a === meId
-    ? `Du gehst so weit nach hinten, wie es ${o} erlaubt: dein vorderer Fuß nicht weiter hinten als ihr hinterer Fuß.`
-    : `Du stellst dich so nah ans Netz, wie es ${o} erlaubt: dein hinterer Fuß nicht weiter vorne als ihr vorderer Fuß.`;
+    ? 'Ganz genau: Dein vorderer Fuß darf nicht weiter hinten sein als ihr hinterer Fuß. Gleichauf ist erlaubt.'
+    : 'Ganz genau: Dein hinterer Fuß darf nicht weiter vorne sein als ihr vorderer Fuß. Gleichauf ist erlaubt.';
 }
 
 function annahmeText(id: string, rotation: number, content: Content): string {
   const limits = (content.constraints[String(rotation)] ?? [])
     .filter(c => c.a === id || c.b === id)
-    .map(c => limitSentence(c, id, rotation))
+    .map(c => `Achte darauf: ${simpleRule(c, id)}`)
     .join(' ');
   return [annahmeCore(id, rotation, content), limits].filter(Boolean).join(' ');
 }
@@ -98,25 +107,11 @@ function annahmeCore(id: string, rotation: number, content: Content): string {
     return `Du nimmst an: ${mates} und du – ihr bildet den 3er-Riegel. ${move} Stellt euch so, dass ihr zu dritt die Feldbreite abdeckt.`;
   }
   if (f.role === 'zuspieler') {
-    return `Du nimmst nicht an. ${move} Dein Ziel ist das Zuspielfenster am Netz zwischen Zone 3 und 2 – deshalb stehst du so nah daran, wie es deine Nachbarinnen erlauben, und läufst los, sobald die Gegnerin den Ball schlägt.`;
+    return `Du nimmst nicht an. ${move} Stell dich so nah wie erlaubt an dein Ziel: das Netz zwischen Zone 3 und 2. Sobald die Gegnerin aufschlägt, läufst du dorthin.`;
   }
   return front
     ? `Du nimmst nicht an. ${move} Mach dem Riegel Platz und halte dich vorne für den Angriff bereit.`
     : `Du nimmst nicht an. ${move} Stell dich hinter den Riegel, damit die Annehmenden freie Bahn haben.`;
-}
-
-/** Eine Linie als Du-Satz mit dem genauen Fuß-Maß nach FIVB 7.4.3 */
-export function youSentence(c: Constraint, meId: string, rotation: number): string {
-  const other = figureById(c.a === meId ? c.b : c.a);
-  const o = who(other, rotation);
-  if (c.kind === 'left') {
-    return c.a === meId
-      ? `Du darfst nach rechts rücken, bis dein linker Fuß auf Höhe des rechten Fußes von ${o} ist – weiter nicht.`
-      : `Du darfst nach links rücken, bis dein rechter Fuß auf Höhe des linken Fußes von ${o} ist – weiter nicht.`;
-  }
-  return c.a === meId
-    ? `Du darfst nach hinten rücken, bis dein vorderer Fuß auf Höhe des hinteren Fußes von ${o} ist – weiter nicht.`
-    : `Du darfst so nah ans Netz, bis dein hinterer Fuß auf Höhe des vorderen Fußes von ${o} ist – weiter nach vorne nicht.`;
 }
 
 /** Der erklärende Text für eine Phase – überschrieben, falls die Trainerin einen eigenen hinterlegt hat */
@@ -131,6 +126,6 @@ export function personalPhaseText(id: string, rotation: number, phase: Phase, co
   if (phase === 'annahme') return annahmeText(id, rotation, content);
   const lines = (content.constraints[String(rotation)] ?? []).filter(c => c.a === id || c.b === id);
   return lines.length
-    ? 'Die orangen Linien zeigen, wo deine Grenzen sind. Bis dorthin darfst du gehen – aber nicht weiter, sonst ist es ein Stellungsfehler.'
+    ? 'Die orangen Linien sind deine Grenzen. Bis zur Linie darfst du – darüber hinaus ist es ein Stellungsfehler.'
     : 'In dieser Rotation begrenzt dich keine der entscheidenden Linien direkt. Du hast Spielraum – aber tausch nie die Reihenfolge mit deinen Nachbarinnen.';
 }

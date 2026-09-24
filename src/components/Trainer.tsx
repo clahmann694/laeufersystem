@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Court, RULE_COLOR } from './Court';
 import { LIBERO, MIDDLE_ID, PHASE_ORDER, Phase, ROLE_COLOR, SETTER, TEAM, benchedMiddle, frontMiddle, resolveFocus, constraintText, figureById, isFrontRow, laeuferOf, personalTask, textOn, zoneOf, zoneOfFigure } from '../data/volleyball';
 import { Editable, useContent } from '../content/ContentProvider';
-import { personalPhaseText, youSentence } from '../data/personal';
+import { exactRule, personalPhaseText, simpleRule } from '../data/personal';
 
 /** Pause zwischen zwei Phasen beim automatischen Ablauf */
 const STEP_MS = 1500;
@@ -244,8 +244,8 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
                   ) : (
                     actualId ? (
                       <>
-                        <strong className="text-white">{youSentence(c, actualId, rotation)}</strong>
-                        <span className="block mt-1.5 text-white/60">{c.why}</span>
+                        <strong className="block text-white text-[15px]">Achte darauf: {simpleRule(c, actualId)}</strong>
+                        <span className="block mt-1.5 text-white/80">{exactRule(c, actualId)}</span>
                       </>
                     ) : (
                       <>
