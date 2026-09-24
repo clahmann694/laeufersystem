@@ -87,6 +87,20 @@ export function benchedMiddle(rotation: number): Player {
   return TEAM.find(p => p.role === 'mittelblocker' && !isFrontRow(zoneOf(p, rotation)))!;
 }
 
+/** Die Mittelblockerin, die in dieser Rotation vorne auf dem Feld steht */
+export function frontMiddle(rotation: number): Player {
+  return TEAM.find(p => p.role === 'mittelblocker' && isFrontRow(zoneOf(p, rotation)))!;
+}
+
+/** Kennung "m" im Kapitel "Meine Position": beide Mitten zusammen, es zählt die auf dem Feld */
+export const MIDDLE_ID = 'm';
+export const MIDDLE: Figure = { id: MIDDLE_ID, short: 'M', name: 'Mitte', role: 'mittelblocker' };
+
+/** Welche echte Figur hinter einer Auswahl steckt – bei "m" die Mitte, die gerade spielt */
+export function resolveFocus(id: string, rotation: number): string {
+  return id === MIDDLE_ID ? frontMiddle(rotation).id : id;
+}
+
 const ROMAN: Record<Zone, string> = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' };
 
 /** "Läufer I … VI" – benannt nach der Zone, in der die Zuspielerin steht */

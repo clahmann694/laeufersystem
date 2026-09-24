@@ -13,6 +13,8 @@ interface Props {
   onSelect: (id: string | null) => void;
   /** Nur Linien zeigen, an denen diese Figur beteiligt ist */
   onlyFor?: string;
+  /** Zusätzlich hervorheben (z. B. die Mitte, die beim Personenwechsel auf die Bank geht) */
+  alsoHighlight?: string;
 }
 
 const ZONES: Zone[] = [4, 3, 2, 5, 6, 1];
@@ -22,7 +24,8 @@ const ZONES: Zone[] = [4, 3, 2, 5, 6, 1];
  * Rechts daneben die Wechselzone mit der Ersatzbank.
  * Im Bearbeitungsmodus lassen sich die Annahmepositionen mit der Maus ziehen.
  */
-export function Court({ rotation, phase, highlightId, onSelect, onlyFor }: Props) {
+export function Court({ rotation, phase, highlightId, onSelect, onlyFor, alsoHighlight }: Props) {
+  const isDim = (id: string) => highlightId !== null && highlightId !== id && alsoHighlight !== id;
   const { content, editing, update } = useContent();
   const svgRef = useRef<SVGSVGElement>(null);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -136,7 +139,7 @@ export function Court({ rotation, phase, highlightId, onSelect, onlyFor }: Props
         placed
           .filter(p => p.onCourt && dist(p.base, p.at) > 40)
           .map(p => {
-            const dim = highlightId !== null && highlightId !== p.figure.id;
+            const dim = isDim(p.figure.id);
             const setter = p.figure.role === 'zuspieler';
             return (
               <line
@@ -184,7 +187,7 @@ export function Court({ rotation, phase, highlightId, onSelect, onlyFor }: Props
         <FigureDot
           key={p.figure.id}
           placement={p}
-          dim={highlightId !== null && highlightId !== p.figure.id}
+          dim={isDim(p.figure.id)}
           dragging={dragId === p.figure.id}
           onSelect={onSelect}
           onDragStart={draggable && p.onCourt ? e => (e.currentTarget.setPointerCapture?.(e.pointerId), setDragId(p.figure.id)) : undefined}

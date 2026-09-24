@@ -1,10 +1,11 @@
 import { Buddy } from './Buddy';
 import { Trainer } from './Trainer';
 import { Editable, useContent } from '../content/ContentProvider';
-import { LIBERO, ROLE_COLOR, TEAM, figureById, textOn } from '../data/volleyball';
+import { LIBERO, MIDDLE, MIDDLE_ID, ROLE_COLOR, TEAM, figureById, textOn } from '../data/volleyball';
 import { useSubPath } from '../router';
 
-const FIGURES = [...TEAM, LIBERO];
+/** Mitten zusammengefasst: beide lernen beide Läufe, gewechselt wird beim Rotieren */
+const FIGURES = [...TEAM.filter(p => p.role !== 'mittelblocker'), MIDDLE, LIBERO];
 
 /**
  * Kapitel "Meine Position": erst die eigene Figur wählen, dann der Trainer aus ihrer Sicht.
@@ -13,7 +14,9 @@ const FIGURES = [...TEAM, LIBERO];
 export function MyPosition() {
   const { content, update } = useContent();
   const sub = useSubPath();
-  const chosen = sub && FIGURES.some(f => f.id === sub) ? figureById(sub) : null;
+  // alte Links auf m1/m2 landen bei der gemeinsamen Mitte
+  const id = sub === 'm1' || sub === 'm2' ? MIDDLE_ID : sub;
+  const chosen = id === MIDDLE_ID ? MIDDLE : id && FIGURES.some(f => f.id === id) ? figureById(id) : null;
 
   if (!chosen) {
     return (
@@ -59,8 +62,8 @@ export function MyPosition() {
           ))}
         </ul>
         <p className="mt-6 text-sm text-white/50">
-          Außen und Mitte gibt es doppelt: A1 und M1 stehen in Rotation 1 vorne, A2 und M2 hinten. Frag im Zweifel die
-          Trainerin, welche du bist.
+          Außen gibt es doppelt: A1 steht in Rotation 1 vorne, A2 hinten. Die Mitten lernen beide Läufe – im Trainer
+          wechselst du automatisch zwischen M1 und M2.
         </p>
       </section>
     );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Court, RULE_COLOR } from './Court';
-import { LIBERO, PHASE_ORDER, Phase, ROLE_COLOR, SETTER, TEAM, benchedMiddle, constraintText, figureById, isFrontRow, laeuferOf, personalTask, textOn, zoneOf, zoneOfFigure } from '../data/volleyball';
+import { LIBERO, MIDDLE_ID, PHASE_ORDER, Phase, ROLE_COLOR, SETTER, TEAM, benchedMiddle, frontMiddle, resolveFocus, constraintText, figureById, isFrontRow, laeuferOf, personalTask, textOn, zoneOf, zoneOfFigure } from '../data/volleyball';
 import { Editable, useContent } from '../content/ContentProvider';
 
 /** Pause zwischen zwei Phasen beim automatischen Ablauf */
@@ -25,7 +25,13 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
   const [playing, setPlaying] = useState(false);
   const [selectedId, setHighlightId] = useState<string | null>(null);
   // Mit Fokus ist die eigene Figur immer hervorgehoben
-  const highlightId = focusId ?? selectedId;
+  // "m" = beide Mitten: es zählt die, die in dieser Rotation auf dem Feld steht
+  const actualId = focusId ? resolveFocus(focusId, rotation) : undefined;
+  const highlightId = actualId ?? selectedId;
+  const isMiddle = focusId === MIDDLE_ID;
+  const prevRotation = ((rotation + 4) % 6) + 1;
+  /** Beim Mitte-Modus: hat gerade die Person gewechselt? */
+  const swapped = isMiddle && frontMiddle(prevRotation).id !== frontMiddle(rotation).id;
 
   // Ablauf: aus der Grundaufstellung in den Annahmeriegel gleiten, dann die Erklärung
   useEffect(() => {
@@ -63,9 +69,9 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
   const current = phases[phase];
   const stepIndex = PHASE_ORDER.indexOf(phase) + 1;
   const allConstraints = content.constraints[key] ?? [];
-  const constraints = focusId ? allConstraints.filter(c => c.a === focusId || c.b === focusId) : allConstraints;
-  const me = focusId ? figureById(focusId) : null;
-  const task = focusId ? personalTask(focusId, rotation) : null;
+  const constraints = actualId ? allConstraints.filter(c => c.a === actualId || c.b === actualId) : allConstraints;
+  const me = actualId ? figureById(actualId) : null;
+  const task = actualId ? personalTask(actualId, rotation) : null;
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
@@ -81,13 +87,20 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
                   key={r}
                   onClick={() => chooseRotation(r)}
                   aria-pressed={r === rotation}
-                  className={`w-11 h-11 rounded-full font-bold transition ${
+                  className={`relative w-11 h-11 rounded-full font-bold transition ${
                     r === rotation ? 'bg-vsg-500 text-white shadow-dot' : 'bg-white/10 text-white/70 hover:bg-white/20'
                   }`}
                 >
                   {r}
                   {focusId && (
-                    <span className="block -mt-0.5 text-[9px] font-bold opacity-70">Z{zoneOfFigure(focusId, r)}</span>
+                    <span className="block -mt-0.5 text-[9px] font-bold opacity-70">
+                      {isMiddle ? frontMiddle(r).short : `Z${zoneOfFigure(focusId, r)}`}
+                    </span>
+                  )}
+                  {isMiddle && frontMiddle(((r + 4) % 6) + 1).id !== frontMiddle(r).id && (
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-amber-400 text-navy-950 text-[11px] font-black grid place-content-center" title="Personenwechsel">
+                      ⇄
+                    </span>
                   )}
                 </button>
               ))}
@@ -108,7 +121,7 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
         </div>
 
         <div className="mt-6">
-          <Court rotation={rotation} phase={phase} highlightId={highlightId} onSelect={setHighlightId} onlyFor={focusId} />
+          <Court rotation={rotation} phase={phase} highlightId={highlightId} onSelect={setHighlightId} onlyFor={actualId} alsoHighlight={swapped ? benchedMiddle(rotation).id : undefined} />
         </div>
 
         {/* Phasen */}
@@ -155,6 +168,19 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
         <p className="mt-2 text-sm font-semibold text-navy-900/60">
           {setterFront ? 'Z im Vorderfeld · zwei Angreiferinnen am Netz' : 'Z im Hinterfeld · drei Angreiferinnen am Netz'}
         </p>
+
+        {swapped && (
+          <div key={rotation} className="swap-alert mt-6 rounded-2xl bg-amber-400 text-navy-950 p-4 flex gap-3 items-start">
+            <span className="shrink-0 w-11 h-11 rounded-full bg-navy-950 text-amber-300 grid place-content-center text-xl font-black">⇄</span>
+            <div className="min-w-0">
+              <p className="eyebrow">Personenwechsel</p>
+              <p className="mt-1.5 text-sm font-semibold leading-relaxed">
+                {benchedMiddle(rotation).short} rotiert nach hinten und geht auf die Bank – die Libera übernimmt. Jetzt spielst du als{' '}
+                <strong>{frontMiddle(rotation).short}</strong> vorne in Zone {zoneOfFigure(frontMiddle(rotation).id, rotation)}.
+              </p>
+            </div>
+          </div>
+        )}
 
         {me && task && (
           <div className="mt-6 rounded-2xl bg-navy-900 text-white p-4 flex gap-3">

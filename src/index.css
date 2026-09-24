@@ -102,3 +102,14 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Personenwechsel bei den Mitten: kurz aufblinken */
+@keyframes swap-in {
+  0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+  100% { transform: scale(1); }
+}
+
+.swap-alert {
+  animation: swap-in 900ms ease-out 2;
+}

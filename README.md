@@ -16,7 +16,8 @@ Wo stehe ich beim gegnerischen Aufschlag, und wer nimmt an?
   3. **Erklärung** – orange Linien wie in den Vereinsdiagrammen zeigen die Stellungsregel-Paare,
      die diese Aufstellung erzwingen; rechts steht zu jeder Linie ein Satz
 - **▶ Ablauf** gleitet automatisch von der Grundaufstellung in den Annahmeriegel
-- **Meine Position**: eigene Figur wählen (Z, A1, A2, M1, M2, D, L) → Trainer aus dieser Sicht:
+- **Meine Position**: eigene Figur wählen (Z, A1, A2, Mitte, D, L – die Mitten lernen beide Läufe,
+  beim Rotieren wird sichtbar zwischen M1 und M2 gewechselt) → Trainer aus dieser Sicht:
   eigene Zone je Rotation, was man tut (annehmen / verstecken / Bank), nur die eigenen Linien
 - Einzelne Spielerinnen antippen, um nur deren Weg zu sehen
 - Ein Kapitel pro Ansicht (Hash-Routing): Startseite mit drei Kacheln, dann `#/grundlagen`,
