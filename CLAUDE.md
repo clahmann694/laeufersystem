@@ -71,7 +71,9 @@ Structure: one chapter per view, hash-routed (`src/router.ts`: `#/`, `#/grundlag
 `App.tsx` renders `SiteNav` (sticky, chapter tabs) + Home (three chapter tiles, no
 scrolling) | `Basics` (eight rules as a stepper with inline-SVG sketches, then a role
 legend) | `Trainer` | `MyPosition` (pick a figure, then `Trainer focusId=…`: own figure
-highlighted, zone per rotation, `personalTask()` text, only own lines; M1/M2 are merged
+highlighted, zone per rotation, only own lines, all texts in "Du" form from
+`src/data/personal.ts` (computed from zones/reception/constraints, overridable per
+figure/rotation/phase via `content.personal`); M1/M2 are merged
 into one "Mitte" choice (`MIDDLE_ID` = "m", `resolveFocus()` follows the middle on court,
 swap to the other middle at rotations 3 and 6 is shown explicitly)) | Rules, each
 followed by `ChapterNav`. The user explicitly chose

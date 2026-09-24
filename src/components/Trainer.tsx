@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Court, RULE_COLOR } from './Court';
 import { LIBERO, MIDDLE_ID, PHASE_ORDER, Phase, ROLE_COLOR, SETTER, TEAM, benchedMiddle, frontMiddle, resolveFocus, constraintText, figureById, isFrontRow, laeuferOf, personalTask, textOn, zoneOf, zoneOfFigure } from '../data/volleyball';
 import { Editable, useContent } from '../content/ContentProvider';
+import { personalPhaseText, youSentence } from '../data/personal';
 
 /** Pause zwischen zwei Phasen beim automatischen Ablauf */
 const STEP_MS = 1500;
@@ -182,36 +183,49 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
           </div>
         )}
 
-        {me && task && (
-          <div className="mt-6 rounded-2xl bg-navy-900 text-white p-4 flex gap-3">
+        {me && task && actualId ? (
+          /* Meine Position: persönliche Erklärung statt allgemeinem Phasentext */
+          <div className="mt-6 rounded-2xl bg-navy-900 text-white p-4 sm:p-5 flex gap-3">
             <span
               className="shrink-0 w-11 h-11 rounded-full grid place-content-center text-sm font-black"
               style={{ background: ROLE_COLOR[me.role], color: textOn(me.role) }}
             >
-              {me.short}
+              Du
             </span>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="eyebrow text-vsg-300">
-                Du · Zone {zoneOfFigure(me.id, rotation)} · {isFrontRow(zoneOfFigure(me.id, rotation)) ? 'vorne' : 'hinten'}
+                {current.title} · {me.short} · Zone {zoneOfFigure(me.id, rotation)}
                 {task.status === 'annahme' ? ' · Annahme' : task.status === 'bank' ? ' · Bank' : ''}
               </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-white/85">{task.text}</p>
+              <Editable
+                as="p"
+                className="mt-2 text-[15px] leading-relaxed text-white/90"
+                value={personalPhaseText(actualId, rotation, phase, content)}
+                onChange={v =>
+                  update(d => {
+                    d.personal ??= {};
+                    d.personal[actualId] ??= {};
+                    d.personal[actualId][key] ??= {};
+                    d.personal[actualId][key][phase] = v;
+                  })
+                }
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="mt-7 pt-7 border-t border-navy-900/10 flex gap-4">
+            <span className="shrink-0 w-11 h-11 rounded-full bg-vsg-400 text-white grid place-content-center font-black">{stepIndex}</span>
+            <div className="min-w-0 flex-1">
+              <Editable as="p" className="eyebrow text-navy-900" value={current.title} onChange={v => update(d => void (d.trainer.phases[phase].title = v))} />
+              <Editable
+                as="p"
+                className="mt-2 text-[15px] leading-relaxed text-navy-900/75"
+                value={current.text}
+                onChange={v => update(d => void (d.trainer.phases[phase].text = v))}
+              />
             </div>
           </div>
         )}
-
-        <div className="mt-7 pt-7 border-t border-navy-900/10 flex gap-4">
-          <span className="shrink-0 w-11 h-11 rounded-full bg-vsg-400 text-white grid place-content-center font-black">{stepIndex}</span>
-          <div className="min-w-0 flex-1">
-            <Editable as="p" className="eyebrow text-navy-900" value={current.title} onChange={v => update(d => void (d.trainer.phases[phase].title = v))} />
-            <Editable
-              as="p"
-              className="mt-2 text-[15px] leading-relaxed text-navy-900/75"
-              value={current.text}
-              onChange={v => update(d => void (d.trainer.phases[phase].text = v))}
-            />
-          </div>
-        </div>
 
         {/* Erklärung: ein Satz je Linie im Feld */}
         {phase === 'erklaerung' && (
@@ -228,19 +242,20 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
                   {editing && !focusId ? (
                     <ConstraintForm rotation={rotation} index={i} />
                   ) : (
-                    <>
-                      <strong className="text-white">{constraintText(c, rotation)}</strong> {c.why}
-                    </>
+                    actualId ? (
+                      <>
+                        <strong className="text-white">{youSentence(c, actualId, rotation)}</strong>
+                        <span className="block mt-1.5 text-white/60">{c.why}</span>
+                      </>
+                    ) : (
+                      <>
+                        <strong className="text-white">{constraintText(c, rotation)}</strong> {c.why}
+                      </>
+                    )
                   )}
                 </div>
               </li>
             ))}
-            {focusId && constraints.length === 0 && (
-              <li className="rounded-2xl bg-navy-900/5 p-4 text-sm leading-relaxed text-navy-900/70">
-                In dieser Rotation schränkt dich keine der entscheidenden Stellungsregeln direkt ein – du hast Spielraum,
-                solange du deine Zone nicht mit deinen Nachbarinnen tauschst.
-              </li>
-            )}
             {editing && !focusId && (
               <li>
                 <button

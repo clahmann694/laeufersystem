@@ -15,6 +15,11 @@ export interface Content {
   basics: { title1: string; title2: string; intro: string; cta: string; rules: { title: string; text: string }[] };
   trainer: { badge: string; phases: Record<Phase, { label: string; title: string; text: string }> };
   regeln: { intro: string };
+  /**
+   * Eigene Texte der Trainerin für "Meine Position": Figur → Rotation → Phase.
+   * Fehlt ein Eintrag, wird der Text automatisch erzeugt (src/data/personal.ts).
+   */
+  personal?: Record<string, Record<string, Partial<Record<Phase, string>>>>;
   /** Sprechblasen der Maskottchen je Kapitel */
   buddies: { grundlagen: string; trainer: string; position: string; positionChosen: string; regeln: string; weiter: string };
   /** Annahmeformation je Rotation ("1"…"6") und Figur */
