@@ -74,8 +74,9 @@ legend) | `Trainer` | `MyPosition` (pick a figure, then `Trainer focusId=…`: o
 highlighted, zone per rotation, `personalTask()` text, only own lines) | Rules, each
 followed by `ChapterNav`. The user explicitly chose
 "one chapter per view" over one long scroll page because of phone usability – don't merge
-the chapters back into one page. Keep rule wording consistent with FIVB 7.4/7.5 (only
-the receiving team since 2025). Mobile matters: check narrow widths after layout changes.
+the chapters back into one page. Keep rule wording consistent with FIVB 7.4/7.5 2025–2028 (only the receiving team;
+7.4.3: compare with the partner's *nearer* foot, level counts – older German texts, e.g.
+on volleyballer.de, are outdated). Mobile matters: check narrow widths after layout changes.
 
 Layout follows a "Sideout Lab"-style mock, colours are the club's: dark navy page,
 VSG cyan (`vsg-500` = crest blue #009fe3) as the only accent, hall-blue court, white

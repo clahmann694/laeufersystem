@@ -11,7 +11,7 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
 const SOURCES = [
   { org: 'FIVB', title: 'Official Volleyball Rules 2025–2028 (PDF)', href: 'https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf' },
-  { org: 'Regel 7.4', title: 'Positionen – deutscher Regeltext', href: 'https://www.volleyballer.de/regeln/regel.php?Kapitel=7.4' },
+  { org: 'Regel 7.4', title: 'Positionen – FIVB-Original 2025–2028, Seite 25 (Füße: 7.4.3)', href: 'https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf#page=27' },
   { org: 'Regel 7.5', title: 'Positionsfehler und Konsequenzen', href: 'https://www.volleyballer.de/regeln/regel.php?Kapitel=7.5' },
   { org: '2025', title: 'Regeländerungen: kein Aufstellungsfehler mehr für die Aufschlagmannschaft', href: 'https://www.volleyballer.de/regeln/regelaenderungen/' },
   { org: 'Libera', title: 'Was die Libera darf und was nicht', href: 'https://www.volleyballer.de/regeln/libero/' },

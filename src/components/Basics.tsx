@@ -356,43 +356,42 @@ function Foot({ x, y, side, color }: { x: number; y: number; side: 'left' | 'rig
 function FeetSketch() {
   const c4 = '#fff';
   const c3 = '#8fd8f6';
-  // Ausschnitt: nur Zone 4/3 und ein Stück dahinter, damit die Füße groß sind.
-  // Grenze: der linke Fuß der 4 (x ≈ 53). Beide Füße der 3 stehen rechts davon – knapp, aber regelkonform.
+  // Regel 7.4.3.2 (seit 2025): der linke Fuß der 4 muss mindestens auf Höhe des RECHTEN Fußes der 3 sein.
+  // Links: rechter Fuß der 3 genau auf Höhe → erlaubt. Rechts: eine Spur weiter links → Stellungsfehler.
+  const Pair = ({ ox, ok }: { ox: number; ok: boolean }) => {
+    const border = ox + 45; // linker Fuß der 4
+    const right3 = ok ? border : border - 16;
+    return (
+      <g>
+        <text x={ox + 75} y={24} textAnchor="middle" fill={ok ? '#7ef0b0' : '#f0507a'} fontSize={15} fontWeight={900}>
+          {ok ? '✓ gleichauf' : '✗ zu weit links'}
+        </text>
+        <Foot x={border} y={78} side="left" color={c4} />
+        <Foot x={border + 26} y={76} side="right" color={c4} />
+        <text x={border + 48} y={84} fill={c4} fontSize={15} fontWeight={900}>
+          4
+        </text>
+        <Foot x={right3 - 26} y={162} side="left" color={c3} />
+        <Foot x={right3} y={160} side="right" color={ok ? c3 : '#f0507a'} />
+        <text x={right3 + 20} y={168} fill={c3} fontSize={15} fontWeight={900}>
+          3
+        </text>
+        <line x1={border} y1={48} x2={border} y2={196} stroke={ok ? '#7ef0b0' : '#f0507a'} strokeWidth={2} strokeDasharray="4 5" />
+      </g>
+    );
+  };
   return (
-    <Sketch label="Nur die Füße zählen" viewBox="-14 -34 230 262">
-      <ZoneNumbers dim />
-      {/* Wo die 3 "eigentlich" stünde */}
-      <circle cx={150} cy={55} r={15} fill="none" stroke={c3} strokeWidth={2} strokeDasharray="4 4" />
-      <path d="M 135 62 Q 105 90 96 118" fill="none" stroke={c3} strokeWidth={2} strokeDasharray="4 4" markerEnd="url(#mini-arrow)" />
-      {/* Die 4: linker Fuß ganz außen */}
-      <Foot x={60} y={72} side="left" color={c4} />
-      <Foot x={86} y={70} side="right" color={c4} />
-      <text x={104} y={78} fill={c4} fontSize={16} fontWeight={900}>
-        4
+    <Sketch label="Nur die Füße zählen">
+      <Pair ox={0} ok />
+      <line x1={150} y1={8} x2={150} y2={205} stroke="#fff" strokeOpacity={0.35} strokeWidth={2} />
+      <Pair ox={150} ok={false} />
+      <text x={150} y={226} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={11.5}>
+        Linker Fuß der 4 ↔ rechter Fuß der 3:
       </text>
-      {/* Die 3: steht weit links, tiefer – beide Füße aber rechts vom linken Fuß der 4 */}
-      <Foot x={72} y={150} side="left" color={c3} />
-      <Foot x={100} y={148} side="right" color={c3} />
-      <text x={118} y={156} fill={c3} fontSize={16} fontWeight={900}>
-        3
+      <text x={150} y={242} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={11.5}>
+        gleichauf oder die 4 weiter links = ok
       </text>
-      {/* Grenzlinie am linken Fuß der 4 */}
-      <line x1={53} y1={40} x2={53} y2={180} stroke="#7ef0b0" strokeWidth={2} strokeDasharray="4 5" />
-      <text x={2} y={196} fill="#7ef0b0" fontSize={11} fontWeight={700}>
-        linker Fuß der 4 bleibt weiter links
-      </text>
-      <text x={2} y={209} fill="#7ef0b0" fontSize={11} fontWeight={700}>
-        als beide Füße der 3 ✓
-      </text>
-      <text x={160} y={96} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10}>
-        Die 3 darf fast
-      </text>
-      <text x={160} y={109} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10}>
-        neben der 4 stehen
-      </text>
-      <text x={-6} y={-6} fill="#8fd8f6" fontSize={11} fontWeight={800} letterSpacing={1.5}>
-        EIN FUSS GENÜGT (7.4.3)
-      </text>
+      <Caption>NUR DIE FÜSSE ZÄHLEN (7.4.3)</Caption>
     </Sketch>
   );
 }

@@ -144,14 +144,15 @@ export function personalTask(id: string, rotation: number): { status: 'annahme' 
   };
 }
 
-/** Der Regelsatz zu einer Linie, z. B. "Z (Zone 4) muss links von M2 (Zone 3) bleiben." */
+/** Der Regelsatz zu einer Linie nach FIVB 7.4.3 (2025–2028) */
 export function constraintText(c: Constraint, rotation: number): string {
   const a = figureById(c.a);
   const b = figureById(c.b);
   const zone = (f: Figure) => (f.id === 'l' ? zoneOf(benchedMiddle(rotation), rotation) : zoneOf(f as Player, rotation));
+  // Regel 7.4.3 (seit 2025): es zählt der zugewandte Fuß der Partnerin, gleichauf ist erlaubt
   return c.kind === 'left'
-    ? `${a.short} (Zone ${zone(a)}) muss mit einem Fuß links von ${b.short} (Zone ${zone(b)}) bleiben.`
-    : `${a.short} (Zone ${zone(a)}) muss mit einem Fuß näher am Netz stehen als ${b.short} (Zone ${zone(b)}).`;
+    ? `${a.short} (Zone ${zone(a)}) braucht einen Fuß mindestens auf Höhe des rechten Fußes von ${b.short} (Zone ${zone(b)}) – oder weiter links.`
+    : `${b.short} (Zone ${zone(b)}) braucht einen Fuß mindestens auf Höhe des vorderen Fußes von ${a.short} (Zone ${zone(a)}) – oder weiter hinten.`;
 }
 
 export type Phase = 'grund' | 'annahme' | 'erklaerung';
