@@ -7,6 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Das Volleyball-Läufersystem (5-1) visuell lernen: Grundaufstellung, Libero-Wechsel und Annahmeriegel in allen sechs Rotationen." />
     <title>Läufersystem · VSG Kleinsteinbach</title>
+    <script>
+      // Nach einem Update kann eine zwischengespeicherte Seite auf alte, gelöschte Dateien zeigen.
+      // Dann einmal frisch laden statt einen leeren Bildschirm zu zeigen.
+      window.addEventListener(
+        'error',
+        function (e) {
+          var t = e.target;
+          if (!t || (t.tagName !== 'SCRIPT' && t.tagName !== 'LINK')) return;
+          try {
+            if (sessionStorage.getItem('reloaded-after-update')) return;
+            sessionStorage.setItem('reloaded-after-update', '1');
+          } catch (err) {}
+          var url = new URL(location.href);
+          url.searchParams.set('v', Date.now().toString());
+          location.replace(url.toString());
+        },
+        true
+      );
+    </script>
   </head>
   <body>
     <div id="root"></div>
