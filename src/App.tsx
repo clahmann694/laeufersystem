@@ -30,7 +30,7 @@ export default function App() {
 function Page() {
   const chapter = useChapter();
   return (
-    <div className="min-h-full bg-paper text-navy-900 overflow-x-hidden flex flex-col">
+    <div className="min-h-full bg-paper text-navy-900 overflow-x-clip flex flex-col">
       <SiteNav crest={asset('wappen.png')} chapter={chapter} />
       <main className="light flex-1 bg-paper text-navy-900">
         {chapter === 'start' && <Home />}

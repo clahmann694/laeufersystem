@@ -81,18 +81,20 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
         {/* Auf dem Handy bleibt die Rotationswahl beim Scrollen unter der Leiste kleben */}
         <div className="sticky top-14 z-20 -mx-5 sm:mx-0 px-5 sm:px-0 py-2 sm:py-0 bg-navy-800/95 sm:bg-transparent backdrop-blur sm:backdrop-blur-none flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow text-white/50 mb-3">Rotation wählen</p>
+            <p className="eyebrow text-white/50 mb-3">Läufer wählen</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5, 6].map(r => (
                 <button
                   key={r}
                   onClick={() => chooseRotation(r)}
                   aria-pressed={r === rotation}
+                  title={`Läufer ${laeuferOf(r)} (Rotation ${r})`}
                   className={`relative w-11 h-11 rounded-full font-bold transition ${
                     r === rotation ? 'bg-vsg-500 text-white shadow-dot' : 'bg-white/10 text-white/70 hover:bg-white/20'
                   }`}
                 >
-                  {r}
+                  {/* Bezeichnung wie im Training: Läufer = Zone der Zuspielerin (1, 6, 5, 4, 3, 2) */}
+                  {zoneOf(SETTER, r)}
                   {focusId && (
                     <span className="block -mt-0.5 text-[9px] font-bold opacity-70">
                       {isMiddle ? frontMiddle(r).short : `Z${zoneOfFigure(focusId, r)}`}
@@ -106,18 +108,6 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
                 </button>
               ))}
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Editable
-              as="span"
-              value={content.trainer.badge}
-              onChange={v => update(d => void (d.trainer.badge = v))}
-              className="hidden sm:inline-block rounded-full border border-amber-300/60 text-amber-200 px-4 py-1.5 text-[11px] font-bold tracking-[0.18em] uppercase"
-            />
-            <span className="inline-flex items-center gap-2 text-white/70 text-xs font-bold tracking-[0.2em] uppercase">
-              <span className="w-8 h-8 rounded-full bg-white/10 grid place-content-center">↑</span>
-              Netz
-            </span>
           </div>
         </div>
 
