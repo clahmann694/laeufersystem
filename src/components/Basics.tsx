@@ -361,7 +361,15 @@ function FeetSketch() {
   const THREE_LEFT = 118;
   const THREE_RIGHT = 144; // Grenze
   const START = 40;
-  const END = 196;
+  const END = 200;
+  const GAP = 26; // Abstand linker ↔ rechter Fuß
+  // Haltepunkte (linker Fuß der 4) mit Erklärung
+  const STOPS: Record<number, string> = {
+    [THREE_LEFT - GAP]: '✓ Alles erlaubt',
+    [THREE_LEFT]: '✓ Auch das ist erlaubt',
+    [THREE_RIGHT]: '✓ Sogar das ist noch erlaubt',
+    [THREE_RIGHT + GAP + 8]: '✗ Nicht mehr erlaubt',
+  };
   const [x, setX] = useState(START); // linker Fuß der 4
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
@@ -375,26 +383,26 @@ function FeetSketch() {
         pause--;
         return;
       }
-      pos += 2;
-      // kurz innehalten genau an der Grenze und am Ende
-      if (pos === THREE_RIGHT) pause = 20;
+      pos += 1;
+      if (STOPS[pos]) pause = 45; // ~2 Sekunden stehen bleiben
       if (pos > END) {
         pos = START;
-        pause = 12;
+        pause = 20;
       }
       setX(pos);
-    }, 40);
+    }, 45);
     return () => clearInterval(t);
   }, []);
   const ok = x <= THREE_RIGHT;
   const color = ok ? '#7ef0b0' : '#f0507a';
+  const label = STOPS[x] ?? (ok ? '✓ erlaubt' : '✗ Stellungsfehler');
   return (
     <Sketch label="Nur die Füße zählen – Animation" viewBox="4 -30 226 214">
       {/* Status */}
       <g transform="translate(117 128)">
-        <rect x={-80} y={-15} width={160} height={30} rx={15} fill="#0b1a27" stroke={color} strokeWidth={2} />
-        <text y={6} textAnchor="middle" fill={color} fontSize={15} fontWeight={900}>
-          {ok ? (x === THREE_RIGHT ? '✓ gleichauf – erlaubt' : '✓ erlaubt') : '✗ Stellungsfehler'}
+        <rect x={-106} y={-15} width={212} height={30} rx={15} fill="#0b1a27" stroke={color} strokeWidth={2} />
+        <text y={5} textAnchor="middle" fill={color} fontSize={12.5} fontWeight={900}>
+          {label}
         </text>
       </g>
       {/* Grenze: rechter Fuß der 3 */}
