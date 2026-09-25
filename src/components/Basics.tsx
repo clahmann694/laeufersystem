@@ -354,66 +354,100 @@ function Foot({ x, y, side, color }: { x: number; y: number; side: 'left' | 'rig
 }
 
 /**
- * Animation zu Regel 5: Die 3 steht fest, die 4 rückt von links immer weiter nach rechts.
- * Erlaubt, solange der linke Fuß der 4 nicht rechts vom rechten Fuß der 3 ist (FIVB 7.4.3.2).
+ * Lässt einen Wert von `start` bis `end` laufen, hält an den `stops` ~2 s an und meldet
+ * das Ende einer Runde über `onCycle`.
  */
+function useSlide(start: number, end: number, stops: Record<number, string>, onCycle: () => void, still: number) {
+  const [pos, setPos] = useState(start);
+  const cycle = useRef(onCycle);
+  cycle.current = onCycle;
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setPos(still);
+      return;
+    }
+    let p = start;
+    let pause = 30;
+    setPos(p);
+    const dir = end > start ? 1 : -1;
+    const t = setInterval(() => {
+      if (pause > 0) return void pause--;
+      p += dir;
+      if (stops[p]) pause = 45;
+      if ((dir > 0 && p > end) || (dir < 0 && p < end)) {
+        cycle.current();
+        return;
+      }
+      setPos(p);
+    }, 45);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [start, end]);
+  return pos;
+}
+
+function Status({ x, y, ok, label, width = 212 }: { x: number; y: number; ok: boolean; label: string; width?: number }) {
+  const color = ok ? '#7ef0b0' : '#f0507a';
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x={-width / 2} y={-15} width={width} height={30} rx={15} fill="#0b1a27" stroke={color} strokeWidth={2} />
+      <text y={5} textAnchor="middle" fill={color} fontSize={12.5} fontWeight={900}>
+        {label}
+      </text>
+    </g>
+  );
+}
+
+/** Regel 5: zwei Animationen im Wechsel – links–rechts (4/3) und vorne–hinten (Außen/Zuspiel in Läufer I) */
 function FeetSketch() {
+  const [mode, setMode] = useState<'lr' | 'vh'>('lr');
+  const next = () => setMode(m => (m === 'lr' ? 'vh' : 'lr'));
+  return (
+    <div>
+      <div className="mb-2 flex justify-center gap-1.5 text-xs font-bold">
+        {(
+          [
+            ['lr', 'Links–rechts'],
+            ['vh', 'Vorne–hinten'],
+          ] as const
+        ).map(([m, label]) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className={`rounded-full px-3 py-1 transition ${mode === m ? 'bg-vsg-300 text-navy-900' : 'bg-white/10 text-white/70 hover:text-white'}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      {mode === 'lr' ? <FeetLeftRight key="lr" onDone={next} /> : <FeetFrontBack key="vh" onDone={next} />}
+    </div>
+  );
+}
+
+/** Die 3 steht fest, die 4 rückt nach rechts. Erlaubt, solange ihr linker Fuß nicht rechts vom rechten Fuß der 3 ist. */
+function FeetLeftRight({ onDone }: { onDone: () => void }) {
   const THREE_LEFT = 118;
-  const THREE_RIGHT = 144; // Grenze
-  const START = 40;
-  const END = 200;
-  const GAP = 26; // Abstand linker ↔ rechter Fuß
-  // Haltepunkte (linker Fuß der 4) mit Erklärung
+  const THREE_RIGHT = 144;
+  const GAP = 26;
   const STOPS: Record<number, string> = {
     [THREE_LEFT - GAP]: '✓ Alles erlaubt',
     [THREE_LEFT]: '✓ Auch das ist erlaubt',
     [THREE_RIGHT]: '✓ Sogar das ist noch erlaubt',
     [THREE_RIGHT + GAP + 8]: '✗ Nicht mehr erlaubt',
   };
-  const [x, setX] = useState(START); // linker Fuß der 4
-  useEffect(() => {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      setX(THREE_RIGHT);
-      return;
-    }
-    let pos = START;
-    let pause = 0;
-    const t = setInterval(() => {
-      if (pause > 0) {
-        pause--;
-        return;
-      }
-      pos += 1;
-      if (STOPS[pos]) pause = 45; // ~2 Sekunden stehen bleiben
-      if (pos > END) {
-        pos = START;
-        pause = 20;
-      }
-      setX(pos);
-    }, 45);
-    return () => clearInterval(t);
-  }, []);
+  const x = useSlide(40, 200, STOPS, onDone, THREE_RIGHT); // linker Fuß der 4
   const ok = x <= THREE_RIGHT;
-  const color = ok ? '#7ef0b0' : '#f0507a';
   const label = STOPS[x] ?? (ok ? '✓ erlaubt' : '✗ Stellungsfehler');
   return (
-    <Sketch label="Nur die Füße zählen – Animation" viewBox="4 -30 226 214">
-      {/* Status */}
-      <g transform="translate(117 128)">
-        <rect x={-106} y={-15} width={212} height={30} rx={15} fill="#0b1a27" stroke={color} strokeWidth={2} />
-        <text y={5} textAnchor="middle" fill={color} fontSize={12.5} fontWeight={900}>
-          {label}
-        </text>
-      </g>
-      {/* Grenze: rechter Fuß der 3 */}
+    <Sketch label="Links–rechts: die 4 rückt an der 3 vorbei" viewBox="4 -30 226 214">
+      <Status x={117} y={128} ok={ok} label={label} />
       <line x1={THREE_RIGHT} y1={4} x2={THREE_RIGHT} y2={98} stroke="#fff" strokeOpacity={0.6} strokeWidth={2} strokeDasharray="5 5" />
-      {/* 4 (oben), wandert */}
       <Foot x={x} y={30} side="left" color={ok ? '#fff' : '#f0507a'} />
-      <Foot x={x + 26} y={29} side="right" color="#fff" />
+      <Foot x={x + GAP} y={29} side="right" color="#fff" />
       <text x={x - 16} y={36} textAnchor="middle" fill="#fff" fontSize={16} fontWeight={900}>
         4
       </text>
-      {/* 3 (unten), steht fest */}
       <Foot x={THREE_LEFT} y={76} side="left" color="#8fd8f6" />
       <Foot x={THREE_RIGHT} y={75} side="right" color="#8fd8f6" />
       <text x={THREE_RIGHT + 24} y={82} textAnchor="middle" fill="#8fd8f6" fontSize={16} fontWeight={900}>
@@ -424,6 +458,49 @@ function FeetSketch() {
       </text>
       <text x={117} y={174} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
         Fuß der 3 vorbei ist: erlaubt
+      </text>
+    </Sketch>
+  );
+}
+
+/**
+ * Läufer I, Annahmeriegel: Außen (Zone 2) steht mit parallelen Füßen, die Zuspielerin (Zone 1)
+ * schleicht im Ausfallschritt nach vorne. Erlaubt, solange ihr hinterer Fuß nicht vor den Füßen der Außen ist.
+ */
+function FeetFrontBack({ onDone }: { onDone: () => void }) {
+  const A = 70; // Höhe der Füße der Außen
+  const LUNGE = 38; // vorderer Fuß der Zuspielerin liegt so weit vor dem hinteren
+  const STOPS: Record<number, string> = {
+    [A + 92]: '✓ Hinter der Außen – erlaubt',
+    [A + LUNGE]: '✓ Neben der Außen – erlaubt',
+    [A]: '✓ Sogar das ist noch erlaubt',
+    [A - 28]: '✗ Nicht mehr erlaubt',
+  };
+  const yb = useSlide(A + 92, A - 28, STOPS, onDone, A); // hinterer Fuß der Zuspielerin
+  const ok = yb >= A;
+  const label = STOPS[yb] ?? (ok ? '✓ erlaubt' : '✗ Stellungsfehler');
+  return (
+    <Sketch label="Vorne–hinten: die Zuspielerin schleicht an der Außen vorbei" viewBox="96 -30 214 290">
+      {/* Grenze: Höhe der Füße der Außen */}
+      <line x1={140} y1={A} x2={300} y2={A} stroke="#fff" strokeOpacity={0.6} strokeWidth={2} strokeDasharray="5 5" />
+      {/* Außen (2): Füße parallel */}
+      <Foot x={170} y={A} side="left" color="#f28c3a" />
+      <Foot x={196} y={A} side="right" color="#f28c3a" />
+      <text x={150} y={A + 6} textAnchor="middle" fill="#f28c3a" fontSize={15} fontWeight={900}>
+        A
+      </text>
+      {/* Zuspielerin (1): Ausfallschritt, linker Fuß vorne */}
+      <Foot x={236} y={yb - LUNGE} side="left" color="#f0507a" />
+      <Foot x={262} y={yb} side="right" color={ok ? '#ffd1dc' : '#f0507a'} />
+      <text x={286} y={yb + 6} textAnchor="middle" fill="#f0507a" fontSize={15} fontWeight={900}>
+        Z
+      </text>
+      <Status x={203} y={206} ok={ok} label={label} width={200} />
+      <text x={203} y={232} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
+        Läufer I: Z darf vor A – solange ihr
+      </text>
+      <text x={203} y={235 + 11} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
+        hinterer Fuß auf Höhe der Außen ist
       </text>
     </Sketch>
   );
