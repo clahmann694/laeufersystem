@@ -468,39 +468,47 @@ function FeetLeftRight({ onDone }: { onDone: () => void }) {
  * schleicht im Ausfallschritt nach vorne. Erlaubt, solange ihr hinterer Fuß nicht vor den Füßen der Außen ist.
  */
 function FeetFrontBack({ onDone }: { onDone: () => void }) {
-  const A = 70; // Höhe der Füße der Außen
+  // Wie im Trainer (Läufer I): beide stehen im Hinterfeld, die Außen etwas weiter vorne
+  const A = 190; // Höhe der Füße der Außen (Zone 2)
   const LUNGE = 38; // vorderer Fuß der Zuspielerin liegt so weit vor dem hinteren
+  const START = A + 80;
   const STOPS: Record<number, string> = {
-    [A + 92]: '✓ Hinter der Außen – erlaubt',
-    [A + LUNGE]: '✓ Neben der Außen – erlaubt',
+    [START]: '✓ Hinter der 2 – erlaubt',
+    [A + LUNGE]: '✓ Neben der 2 – erlaubt',
     [A]: '✓ Sogar das ist noch erlaubt',
     [A - 28]: '✗ Nicht mehr erlaubt',
   };
-  const yb = useSlide(A + 92, A - 28, STOPS, onDone, A); // hinterer Fuß der Zuspielerin
+  const yb = useSlide(START, A - 28, STOPS, onDone, A); // hinterer Fuß der Zuspielerin
   const ok = yb >= A;
   const label = STOPS[yb] ?? (ok ? '✓ erlaubt' : '✗ Stellungsfehler');
   return (
-    <Sketch label="Vorne–hinten: die Zuspielerin schleicht an der Außen vorbei" viewBox="96 -30 214 290">
-      {/* Grenze: Höhe der Füße der Außen */}
-      <line x1={140} y1={A} x2={300} y2={A} stroke="#fff" strokeOpacity={0.6} strokeWidth={2} strokeDasharray="5 5" />
-      {/* Außen (2): Füße parallel */}
-      <Foot x={170} y={A} side="left" color="#f28c3a" />
-      <Foot x={196} y={A} side="right" color="#f28c3a" />
-      <text x={150} y={A + 6} textAnchor="middle" fill="#f28c3a" fontSize={15} fontWeight={900}>
-        A
+    <Sketch label="Vorne–hinten: die 1 schleicht an der 2 vorbei" viewBox="112 72 198 300">
+      <text x={296} y={94} textAnchor="end" fill="#fff" fillOpacity={0.75} fontSize={10}>
+        3-m-Linie
       </text>
-      {/* Zuspielerin (1): Ausfallschritt, linker Fuß vorne */}
-      <Foot x={236} y={yb - LUNGE} side="left" color="#f0507a" />
-      <Foot x={262} y={yb} side="right" color={ok ? '#ffd1dc' : '#f0507a'} />
-      <text x={286} y={yb + 6} textAnchor="middle" fill="#f0507a" fontSize={15} fontWeight={900}>
-        Z
+      <text x={296} y={116} textAnchor="end" fill="#fff" fillOpacity={0.75} fontSize={10}>
+        Hinterfeld ↓
       </text>
-      <Status x={203} y={206} ok={ok} label={label} width={200} />
-      <text x={203} y={232} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
-        Läufer I: Z darf vor A – solange ihr
+      {/* Grenze: Höhe der Füße der 2 */}
+      <line x1={150} y1={A} x2={300} y2={A} stroke="#fff" strokeOpacity={0.6} strokeWidth={2} strokeDasharray="5 5" />
+      {/* Außen (Zone 2): Füße parallel */}
+      <Foot x={186} y={A} side="left" color="#fff" />
+      <Foot x={212} y={A} side="right" color="#fff" />
+      <text x={166} y={A + 6} textAnchor="middle" fill="#fff" fontSize={16} fontWeight={900}>
+        2
       </text>
-      <text x={203} y={235 + 11} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
-        hinterer Fuß auf Höhe der Außen ist
+      {/* Zuspielerin (Zone 1): Ausfallschritt, linker Fuß vorne */}
+      <Foot x={246} y={yb - LUNGE} side="left" color="#8fd8f6" />
+      <Foot x={272} y={yb} side="right" color={ok ? '#8fd8f6' : '#f0507a'} />
+      <text x={292} y={yb + 6} textAnchor="middle" fill="#8fd8f6" fontSize={16} fontWeight={900}>
+        1
+      </text>
+      <Status x={211} y={322} ok={ok} label={label} width={190} />
+      <text x={211} y={348} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
+        Läufer I · erlaubt, solange der hintere
+      </text>
+      <text x={211} y={362} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
+        Fuß der 1 auf Höhe der 2 ist
       </text>
     </Sketch>
   );
