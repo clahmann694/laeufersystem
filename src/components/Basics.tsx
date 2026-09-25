@@ -303,7 +303,7 @@ function LeftRightSketch() {
       <Dot x={100} y={200} label="6" color="#f0507a" text="#fff" />
       <Dot x={150} y={210} label="5" color="#f0507a" text="#fff" />
       <Dot x={250} y={200} label="1" />
-      <text x={205} y={208} fill="#f0507a" fontSize={22} fontWeight={900}>
+      <text x={125} y={172} textAnchor="middle" fill="#f0507a" fontSize={22} fontWeight={900}>
         ✗
       </text>
       <line x1={40} y1={88} x2={124} y2={88} stroke="#8fd8f6" strokeWidth={3} markerEnd="url(#mini-arrow)" />
