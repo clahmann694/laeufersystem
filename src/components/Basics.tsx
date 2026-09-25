@@ -52,7 +52,7 @@ export function Basics() {
 function RuleStepper() {
   const { content, editing, update } = useContent();
   const rules = content.basics.rules;
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(() => Math.max(0, Math.min(7, Number(new URLSearchParams(window.location.search).get('regel') || 1) - 1)));
   const last = rules.length - 1;
   const card = useRef<HTMLDivElement>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
@@ -353,45 +353,70 @@ function Foot({ x, y, side, color }: { x: number; y: number; side: 'left' | 'rig
   );
 }
 
+/**
+ * Animation zu Regel 5: Die 3 steht fest, die 4 rückt von links immer weiter nach rechts.
+ * Erlaubt, solange der linke Fuß der 4 nicht rechts vom rechten Fuß der 3 ist (FIVB 7.4.3.2).
+ */
 function FeetSketch() {
-  const c4 = '#fff';
-  const c3 = '#8fd8f6';
-  // Regel 7.4.3.2 (seit 2025): der linke Fuß der 4 muss mindestens auf Höhe des RECHTEN Fußes der 3 sein.
-  // Links: rechter Fuß der 3 genau auf Höhe → erlaubt. Rechts: eine Spur weiter links → Stellungsfehler.
-  const Pair = ({ ox, ok }: { ox: number; ok: boolean }) => {
-    const border = ox + 45; // linker Fuß der 4
-    const right3 = ok ? border : border - 16;
-    return (
-      <g>
-        <text x={ox + 75} y={24} textAnchor="middle" fill={ok ? '#7ef0b0' : '#f0507a'} fontSize={15} fontWeight={900}>
-          {ok ? '✓ gleichauf' : '✗ zu weit links'}
-        </text>
-        <Foot x={border} y={78} side="left" color={c4} />
-        <Foot x={border + 26} y={76} side="right" color={c4} />
-        <text x={border + 48} y={84} fill={c4} fontSize={15} fontWeight={900}>
-          4
-        </text>
-        <Foot x={right3 - 26} y={162} side="left" color={c3} />
-        <Foot x={right3} y={160} side="right" color={ok ? c3 : '#f0507a'} />
-        <text x={right3 + 20} y={168} fill={c3} fontSize={15} fontWeight={900}>
-          3
-        </text>
-        <line x1={border} y1={48} x2={border} y2={196} stroke={ok ? '#7ef0b0' : '#f0507a'} strokeWidth={2} strokeDasharray="4 5" />
-      </g>
-    );
-  };
+  const THREE_LEFT = 118;
+  const THREE_RIGHT = 144; // Grenze
+  const START = 40;
+  const END = 196;
+  const [x, setX] = useState(START); // linker Fuß der 4
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setX(THREE_RIGHT);
+      return;
+    }
+    let pos = START;
+    let pause = 0;
+    const t = setInterval(() => {
+      if (pause > 0) {
+        pause--;
+        return;
+      }
+      pos += 2;
+      // kurz innehalten genau an der Grenze und am Ende
+      if (pos === THREE_RIGHT) pause = 20;
+      if (pos > END) {
+        pos = START;
+        pause = 12;
+      }
+      setX(pos);
+    }, 40);
+    return () => clearInterval(t);
+  }, []);
+  const ok = x <= THREE_RIGHT;
+  const color = ok ? '#7ef0b0' : '#f0507a';
   return (
-    <Sketch label="Nur die Füße zählen">
-      <Pair ox={0} ok />
-      <line x1={150} y1={8} x2={150} y2={205} stroke="#fff" strokeOpacity={0.35} strokeWidth={2} />
-      <Pair ox={150} ok={false} />
-      <text x={150} y={226} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={11.5}>
-        Linker Fuß der 4 ↔ rechter Fuß der 3:
+    <Sketch label="Nur die Füße zählen – Animation" viewBox="4 -30 226 214">
+      {/* Status */}
+      <g transform="translate(117 128)">
+        <rect x={-80} y={-15} width={160} height={30} rx={15} fill="#0b1a27" stroke={color} strokeWidth={2} />
+        <text y={6} textAnchor="middle" fill={color} fontSize={15} fontWeight={900}>
+          {ok ? (x === THREE_RIGHT ? '✓ gleichauf – erlaubt' : '✓ erlaubt') : '✗ Stellungsfehler'}
+        </text>
+      </g>
+      {/* Grenze: rechter Fuß der 3 */}
+      <line x1={THREE_RIGHT} y1={4} x2={THREE_RIGHT} y2={98} stroke="#fff" strokeOpacity={0.6} strokeWidth={2} strokeDasharray="5 5" />
+      {/* 4 (oben), wandert */}
+      <Foot x={x} y={30} side="left" color={ok ? '#fff' : '#f0507a'} />
+      <Foot x={x + 26} y={29} side="right" color="#fff" />
+      <text x={x - 16} y={36} textAnchor="middle" fill="#fff" fontSize={16} fontWeight={900}>
+        4
       </text>
-      <text x={150} y={242} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={11.5}>
-        gleichauf oder die 4 weiter links = ok
+      {/* 3 (unten), steht fest */}
+      <Foot x={THREE_LEFT} y={76} side="left" color="#8fd8f6" />
+      <Foot x={THREE_RIGHT} y={75} side="right" color="#8fd8f6" />
+      <text x={THREE_RIGHT + 24} y={82} textAnchor="middle" fill="#8fd8f6" fontSize={16} fontWeight={900}>
+        3
       </text>
-      <Caption>NUR DIE FÜSSE ZÄHLEN (7.4.3)</Caption>
+      <text x={117} y={160} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
+        Bis der linke Fuß der 4 am rechten
+      </text>
+      <text x={117} y={174} textAnchor="middle" fill="#fff" fillOpacity={0.9} fontSize={10.5}>
+        Fuß der 3 vorbei ist: erlaubt
+      </text>
     </Sketch>
   );
 }
