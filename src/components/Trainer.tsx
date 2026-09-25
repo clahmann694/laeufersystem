@@ -163,7 +163,7 @@ export function Trainer({ focusId }: { focusId?: string } = {}) {
       </div>
 
       {/* Info-Karte */}
-      <aside className="light rounded-[28px] bg-paper text-navy-900 shadow-panel p-7 flex flex-col">
+      <aside className="light rounded-[28px] bg-paper-card border border-navy-900/10 text-navy-900 shadow-panel p-7 flex flex-col">
         <p className="eyebrow text-navy-900/60">Rotation {rotation} / 6</p>
         <h2 className="headline text-5xl mt-3">Läufer {laeuferOf(rotation)}</h2>
         <p className="mt-2 text-sm font-semibold text-navy-900/60">

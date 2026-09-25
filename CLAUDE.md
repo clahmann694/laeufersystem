@@ -82,7 +82,8 @@ the chapters back into one page. Keep rule wording consistent with FIVB 7.4/7.5 
 7.4.3: compare with the partner's *nearer* foot, level counts – older German texts, e.g.
 on volleyballer.de, are outdated). Mobile matters: check narrow widths after layout changes.
 
-Layout follows a "Sideout Lab"-style mock, colours are the club's: dark navy page,
+Layout follows a "Sideout Lab"-style mock, colours are the club's: light page (`bg-paper`) for every chapter – the user
+wanted all chapters like the light Grundlagen – with a dark navy nav bar, footer and court panel,
 VSG cyan (`vsg-500` = crest blue #009fe3) as the only accent, hall-blue court, white
 info card, big tight headlines (`.headline`, `.eyebrow` in `index.css`). Role colours
 (Z pink, A orange, M teal, D purple, L yellow) are deliberately off-brand so figures

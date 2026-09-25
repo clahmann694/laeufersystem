@@ -12,7 +12,7 @@ const OUTRO: Record<string, BuddyName> = {
 /** Schmale, mitlaufende Leiste: Wappen (zurück zur Übersicht) und die drei Kapitel */
 export function SiteNav({ crest, chapter }: { crest: string; chapter: Chapter }) {
   return (
-    <header className="sticky top-0 z-40 bg-navy-900/85 backdrop-blur border-b border-white/10">
+    <header className="sticky top-0 z-40 bg-navy-900 text-white border-b border-white/10">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 h-14 flex items-center justify-between gap-3">
         <a href={hrefOf('start')} className="flex items-center gap-2.5 shrink-0" title="Zur Übersicht">
           <img src={crest} alt="Wappen VSG Kleinsteinbach" className="h-9 w-auto drop-shadow" />

@@ -30,14 +30,14 @@ export default function App() {
 function Page() {
   const chapter = useChapter();
   return (
-    <div className="min-h-full bg-navy-900 text-white overflow-x-hidden flex flex-col">
+    <div className="min-h-full bg-paper text-navy-900 overflow-x-hidden flex flex-col">
       <SiteNav crest={asset('wappen.png')} chapter={chapter} />
-      <main className="flex-1">
+      <main className="light flex-1 bg-paper text-navy-900">
         {chapter === 'start' && <Home />}
         {chapter === 'grundlagen' && (
           <>
             <Basics />
-            <div className="light bg-paper text-navy-900">
+            <div>
               <ChapterNav chapter="grundlagen" />
             </div>
           </>
@@ -60,14 +60,14 @@ function Page() {
         {chapter === 'regeln' && (
           <>
             <Rules />
-            <div className="light bg-ice text-navy-900">
+            <div>
               <ChapterNav chapter="regeln" />
             </div>
           </>
         )}
       </main>
 
-      <footer className="bg-navy-950">
+      <footer className="bg-navy-950 text-white">
         <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-6 flex flex-wrap items-center justify-between gap-4 text-sm">
           <span className="font-black tracking-[0.2em] uppercase text-white/70">VSG Kleinsteinbach</span>
           <p className="text-white/50">
@@ -88,7 +88,7 @@ function Home() {
   return (
     <section className="max-w-[1400px] mx-auto px-5 sm:px-8 pt-8 sm:pt-14 pb-10 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-center">
       <div>
-        <p className="eyebrow text-vsg-300 flex items-center gap-2">
+        <p className="eyebrow text-vsg-700 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-vsg-400" />
           <Editable value={content.hero.eyebrow} onChange={v => update(d => void (d.hero.eyebrow = v))} />
         </p>
@@ -97,13 +97,13 @@ function Home() {
           {(editing || content.hero.title2) && (
             <>
               <br />
-              <Editable className="text-vsg-300" value={content.hero.title2} onChange={v => update(d => void (d.hero.title2 = v))} />
+              <Editable className="text-vsg-700" value={content.hero.title2} onChange={v => update(d => void (d.hero.title2 = v))} />
             </>
           )}
         </h1>
         <Editable
           as="p"
-          className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-white/70"
+          className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-navy-900/70"
           value={content.hero.intro}
           onChange={v => update(d => void (d.hero.intro = v))}
         />
@@ -113,18 +113,18 @@ function Home() {
             <li key={c.id}>
               <a
                 href={hrefOf(c.id)}
-                className="group h-full rounded-[22px] bg-white/5 border border-white/10 p-4 sm:p-5 hover:bg-white/10 hover:border-vsg-400/60 transition grid grid-cols-[auto_minmax(0,1fr)_auto] sm:block items-center gap-x-4"
+                className="group h-full rounded-[22px] bg-paper-card border border-navy-900/10 shadow-sm p-4 sm:p-5 hover:border-vsg-400 hover:shadow-md transition grid grid-cols-[auto_minmax(0,1fr)_auto] sm:block items-center gap-x-4"
               >
                 <span className="row-span-2 w-9 h-9 rounded-full bg-vsg-500 text-white grid place-content-center font-black">{c.n}</span>
                 <span className="sm:mt-4 block text-lg sm:text-xl font-bold">{c.label}</span>
-                <span className="row-span-2 col-start-3 sm:hidden text-xl text-vsg-300">→</span>
+                <span className="row-span-2 col-start-3 sm:hidden text-xl text-vsg-600">→</span>
                 <Editable
                   as="span"
-                  className="col-start-2 sm:mt-1.5 block text-sm leading-snug sm:leading-relaxed text-white/60"
+                  className="col-start-2 sm:mt-1.5 block text-sm leading-snug sm:leading-relaxed text-navy-900/60"
                   value={content.home[c.id]}
                   onChange={v => update(d => void (d.home[c.id] = v))}
                 />
-                <span className="hidden sm:block mt-4 text-sm font-bold text-vsg-300 group-hover:text-vsg-200">Öffnen →</span>
+                <span className="hidden sm:block mt-4 text-sm font-bold text-vsg-700 group-hover:text-vsg-600">Öffnen →</span>
               </a>
             </li>
           ))}
@@ -138,7 +138,7 @@ function Home() {
 function Rules() {
   const { content, update } = useContent();
   return (
-    <section className="light bg-ice text-navy-900">
+    <section className="light bg-paper text-navy-900">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10 sm:py-16 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div>
           <p className="eyebrow text-navy-900/50">04 · Regeln</p>
@@ -179,7 +179,7 @@ function MascotCard({ src, bubble, caption }: { src: string; bubble: string; cap
   return (
     <div className="relative w-full max-w-[280px] sm:max-w-sm mx-auto lg:max-w-none">
       {/* weicher Lichtschein statt Kartenrahmen */}
-      <div className="absolute inset-x-6 bottom-4 top-16 rounded-full bg-vsg-500/25 blur-3xl" aria-hidden />
+      <div className="absolute inset-x-6 bottom-4 top-16 rounded-full bg-vsg-300/40 blur-3xl" aria-hidden />
       <img src={src} alt="Die Läufer-Buddys: Kuh, Volleyball und Elefant" className="relative w-full h-auto drop-shadow-[0_18px_24px_rgba(0,0,0,0.45)]" />
       <div className="absolute -top-2 left-0 rounded-2xl rounded-bl-md bg-navy-950 text-white border border-white/15 px-4 py-3 shadow-dot">
         <p className="text-[10px] font-black tracking-[0.2em] text-vsg-300">1 → 6</p>
@@ -198,7 +198,7 @@ function TrainerHead() {
   return (
     <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
       <div>
-        <p className="eyebrow text-vsg-300 flex items-center gap-2">
+        <p className="eyebrow text-vsg-700 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-vsg-400" /> 02 · Trainer
         </p>
         <h1 className="headline mt-3 text-[clamp(2rem,5vw,3.5rem)]">Läufer I–VI</h1>
