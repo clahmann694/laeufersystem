@@ -114,23 +114,22 @@ function Home() {
       </div>
       </div>
 
-        <ol className="mt-8 sm:mt-10 grid grid-cols-[minmax(0,1fr)] gap-2.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-6 sm:mt-10 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4">
           {CHAPTERS.map(c => (
             <li key={c.id}>
               <a
                 href={hrefOf(c.id)}
-                className="group h-full rounded-[22px] bg-paper-card border border-navy-900/10 shadow-sm p-4 sm:p-5 hover:border-vsg-400 hover:shadow-md transition grid grid-cols-[auto_minmax(0,1fr)_auto] sm:block items-center gap-x-4"
+                className="group flex flex-col h-full rounded-[22px] bg-paper-card border border-navy-900/10 shadow-sm p-3.5 sm:p-5 hover:border-vsg-400 hover:shadow-md transition"
               >
-                <span className="row-span-2 w-9 h-9 rounded-full bg-vsg-500 text-white grid place-content-center font-black">{c.n}</span>
-                <span className="sm:mt-4 block text-lg sm:text-xl font-bold">{c.label}</span>
-                <span className="row-span-2 col-start-3 sm:hidden text-xl text-vsg-600">→</span>
+                <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-vsg-500 text-white grid place-content-center font-black text-sm sm:text-base">{c.n}</span>
+                <span className="mt-3 sm:mt-4 block text-base sm:text-xl font-bold leading-tight">{c.label}</span>
                 <Editable
                   as="span"
-                  className="col-start-2 sm:mt-1.5 block text-sm leading-snug sm:leading-relaxed text-navy-900/60"
+                  className="mt-1 sm:mt-1.5 block text-xs sm:text-sm leading-snug sm:leading-relaxed text-navy-900/60"
                   value={content.home[c.id]}
                   onChange={v => update(d => void (d.home[c.id] = v))}
                 />
-                <span className="hidden sm:block mt-4 text-sm font-bold text-vsg-700 group-hover:text-vsg-600">Öffnen →</span>
+                <span className="mt-auto pt-3 sm:pt-4 block text-xs sm:text-sm font-bold text-vsg-700 group-hover:text-vsg-600">Öffnen →</span>
               </a>
             </li>
           ))}
