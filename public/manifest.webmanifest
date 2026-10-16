@@ -1,0 +1,15 @@
+{
+  "name": "Läufersystem · VSG Kleinsteinbach",
+  "short_name": "Läufersystem",
+  "description": "Das Volleyball-Läufersystem (5-1) visuell lernen.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f7fa",
+  "theme_color": "#0b1a27",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
