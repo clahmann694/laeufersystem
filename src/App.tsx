@@ -30,7 +30,7 @@ export default function App() {
 function Page() {
   const chapter = useChapter();
   return (
-    <div className="min-h-full bg-paper text-navy-900 overflow-x-clip flex flex-col">
+    <div className="min-h-[100dvh] bg-paper text-navy-900 overflow-x-clip flex flex-col">
       <SiteNav crest={asset('wappen.png')} chapter={chapter} />
       <main className="light flex-1 bg-paper text-navy-900">
         {chapter === 'start' && <Home />}
@@ -86,7 +86,8 @@ function Page() {
 function Home() {
   const { content, editing, update } = useContent();
   return (
-    <section className="max-w-[1400px] mx-auto px-5 sm:px-8 pt-8 sm:pt-14 pb-10 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-center">
+    <section className="max-w-[1400px] mx-auto px-5 sm:px-8 pt-8 sm:pt-14 pb-12">
+      <div className="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_380px] gap-8 items-center">
       <div>
         <p className="eyebrow text-vsg-700 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-vsg-400" />
@@ -107,8 +108,13 @@ function Home() {
           value={content.hero.intro}
           onChange={v => update(d => void (d.hero.intro = v))}
         />
+      </div>
+      <div className="hidden lg:block">
+        <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} />
+      </div>
+      </div>
 
-        <ol className="mt-6 sm:mt-8 grid grid-cols-[minmax(0,1fr)] gap-2.5 sm:gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <ol className="mt-8 sm:mt-10 grid grid-cols-[minmax(0,1fr)] gap-2.5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {CHAPTERS.map(c => (
             <li key={c.id}>
               <a
@@ -129,8 +135,10 @@ function Home() {
             </li>
           ))}
         </ol>
+      {/* Handy: die Buddys unter den Kacheln */}
+      <div className="mt-10 lg:hidden">
+        <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} />
       </div>
-      <MascotCard src={asset('mascots/team.png')} bubble={content.hero.bubble} caption={content.hero.caption} />
     </section>
   );
 }
@@ -177,11 +185,11 @@ function Rules() {
 /** Die drei Buddys freistehend, mit Sprechblase und Namensschild */
 function MascotCard({ src, bubble, caption }: { src: string; bubble: string; caption: string }) {
   return (
-    <div className="relative w-full max-w-[280px] sm:max-w-sm mx-auto lg:max-w-none">
+    <div className="relative w-full max-w-[300px] sm:max-w-sm mx-auto lg:max-w-none pt-[4.75rem]">
       {/* weicher Lichtschein statt Kartenrahmen */}
-      <div className="absolute inset-x-6 bottom-4 top-16 rounded-full bg-vsg-300/40 blur-3xl" aria-hidden />
+      <div className="absolute inset-x-6 bottom-4 top-28 rounded-full bg-vsg-300/40 blur-3xl" aria-hidden />
       <img src={src} alt="Die Läufer-Buddys: Kuh, Volleyball und Elefant" className="relative w-full h-auto drop-shadow-[0_18px_24px_rgba(0,0,0,0.45)]" />
-      <div className="absolute -top-2 left-0 rounded-2xl rounded-bl-md bg-navy-950 text-white border border-white/15 px-4 py-3 shadow-dot">
+      <div className="absolute top-0 left-0 rounded-2xl rounded-bl-md bg-navy-950 text-white border border-white/15 px-4 py-3 shadow-dot">
         <p className="text-[10px] font-black tracking-[0.2em] text-vsg-300">1 → 6</p>
         <p className="mt-1 text-sm font-bold leading-tight max-w-[11rem]">{bubble}</p>
       </div>
